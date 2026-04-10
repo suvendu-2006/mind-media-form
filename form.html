@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audience Assessment Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-card: rgba(255,255,255,0.04);
+      --text-primary: #F5F5F7;
+      --text-muted: rgba(255,255,255,0.55);
+      --accent-primary: #147CE5;
+      --border-subtle: rgba(255,255,255,0.10);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 30px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    h1 { text-align: center; font-weight: 800; margin-bottom: 5px; font-size: 1.8rem; }
+    p.subtitle { text-align: center; color: var(--text-muted); margin-bottom: 30px; font-size: 0.95rem; line-height: 1.5; }
+    
+    .input-group { margin-bottom: 30px; }
+    .input-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 1rem; color: var(--text-primary); }
+    .input-group input[type="text"] {
+      width: 100%; box-sizing: border-box; padding: 14px 16px; border-radius: 8px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle);
+      color: white; font-size: 1rem; font-family: 'Inter', sans-serif;
+    }
+    .input-group input[type="text"]:focus { outline: none; border-color: var(--accent-primary); background: rgba(255,255,255,0.08); }
+
+    .progress-wrapper {
+      margin-bottom: 30px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      height: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    #progress-fill {
+      position: absolute; top: 0; left: 0; height: 100%;
+      background: var(--accent-primary);
+      width: 0%; transition: width 0.3s ease;
+    }
+    .progress-text { text-align: right; font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; font-weight: 500; }
+
+    .question { margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; }
+    .question:last-of-type { border-bottom: none; }
+    .question label { display: block; margin-bottom: 16px; font-weight: 500; font-size: 1.05rem; line-height: 1.5; }
+    .options { display: flex; gap: 12px; }
+    .options label {
+      flex: 1; text-align: center; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-subtle); border-radius: 8px;
+      padding: 16px 5px; cursor: pointer; font-weight: 500; font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+    .options input[type="radio"] { display: none; }
+    
+    .options input[type="radio"][value="yes"]:checked + label {
+      background: #ef4444; border-color: #ef4444; color: white; font-weight: 800;
+    }
+    .options input[type="radio"][value="no"]:checked + label {
+      background: #10b981; border-color: #10b981; color: white; font-weight: 800;
+    }
+
+    .submit-btn {
+      width: 100%; padding: 18px; background: var(--accent-primary);
+      color: white; border: none; border-radius: 8px; font-size: 1.2rem;
+      font-weight: 800; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease;
+      margin-top: 10px;
+    }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .success-msg {
+      display: none; text-align: center; color: #10b981; font-weight: 600;
+      margin-top: 25px; font-size: 1.1rem; padding: 20px; background: rgba(16,185,129,0.1);
+      border-radius: 8px; border: 1px solid rgba(16,185,129,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Live Assessment</h1>
+    <p class="subtitle">Answer honestly. Your results will dynamically build the live vulnerability index on the presentation screen.</p>
+
+    <form id="audienceForm">
+      <div class="input-group">
+        <label for="userName">Your Full Name</label>
+        <input type="text" id="userName" name="userName" placeholder="Enter your name..." required autocomplete="off">
+      </div>
+
+      <div class="progress-wrapper">
+        <div id="progress-fill"></div>
+      </div>
+      <div class="progress-text" id="progress-text">0 / 10 Answered</div>
+
+      <div id="questions-container"></div>
+      
+      <button type="submit" class="submit-btn" id="submitBtn" disabled>Complete All Questions</button>
+      <div class="success-msg" id="successMsg">Your response has been successfully submitted!</div>
+    </form>
+  </div>
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <!-- Realtime Database SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0N-F7chJjcaZxEEkSTKWYW6f78Czm-_E",
+      authDomain: "chatbot-ac0f5.firebaseapp.com",
+      databaseURL: "https://chatbot-ac0f5-default-rtdb.firebaseio.com",
+      projectId: "chatbot-ac0f5",
+      storageBucket: "chatbot-ac0f5.firebasestorage.app",
+      messagingSenderId: "807712096391",
+      appId: "1:807712096391:web:2224fa0b060ba9d398f822"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const questionsData = [
+      { text: "1. Do you check social media within 10 minutes of waking up?", weight: 3 },
+      { text: "2. Have you ever scrolled social media for much longer than you intended?", weight: 5 },
+      { text: "3. Does using social media at night affect your sleep?", weight: 5 },
+      { text: "4. Has social media content ever made you feel anxious, sad, or angry?", weight: 4 },
+      { text: "5. Do you compare your life to what you see on social media?", weight: 4 },
+      { text: "6. Do you feel anxious or uncomfortable when you haven't checked social media for a while?", weight: 5 },
+      { text: "7. Do you find it hard to focus on studying or work without checking social media?", weight: 3 },
+      { text: "8. Do you care about how many likes or reactions your posts get?", weight: 4 },
+      { text: "9. Has social media ever caused a misunderstanding or conflict in your real life?", weight: 4 },
+      { text: "10. Do you feel like social media affects you more than you would like to admit?", weight: 3 }
+    ];
+
+    const container = document.getElementById('questions-container');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+
+    // Create question elements
+    questionsData.forEach((q, idx) => {
+      const qDiv = document.createElement('div');
+      qDiv.className = 'question';
+      
+      const label = document.createElement('label');
+      label.textContent = q.text;
+      qDiv.appendChild(label);
+
+      const optsDiv = document.createElement('div');
+      optsDiv.className = 'options';
+
+      ['yes', 'no'].forEach(val => {
+        const wrap = document.createElement('div');
+        wrap.style.flex = "1";
+        
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = `q${idx}`;
+        radio.id = `q${idx}_${val}`;
+        radio.value = val;
+        
+        radio.addEventListener('change', updateProgress);
+
+        const rLabel = document.createElement('label');
+        rLabel.setAttribute('for', radio.id);
+        rLabel.textContent = val.toUpperCase();
+        
+        wrap.appendChild(radio);
+        wrap.appendChild(rLabel);
+        optsDiv.appendChild(wrap);
+      });
+
+      qDiv.appendChild(optsDiv);
+      container.appendChild(qDiv);
+    });
+
+    const userNameInput = document.getElementById('userName');
+    userNameInput.addEventListener('input', updateProgress);
+
+    function updateProgress() {
+      let answeredCount = 0;
+      for (let i = 0; i < 10; i++) {
+        const radios = document.getElementsByName(`q${i}`);
+        if ((radios[0] && radios[0].checked) || (radios[1] && radios[1].checked)) {
+            answeredCount++;
+        }
+      }
+      
+      progressFill.style.width = (answeredCount / 10 * 100) + '%';
+      progressText.textContent = `${answeredCount} / 10 Answered`;
+
+      const isNameFilled = userNameInput.value.trim().length > 0;
+      if (answeredCount === 10 && isNameFilled) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Results";
+      } else {
+        submitBtn.disabled = true;
+        if (!isNameFilled && answeredCount === 10) {
+           submitBtn.textContent = "Fill in your Name to Submit";
+        } else {
+           submitBtn.textContent = "Complete All Questions";
+        }
+      }
+    }
+
+    document.getElementById('audienceForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('userName').value.trim();
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+
+      const formData = new FormData(e.target);
+      
+      // Calculate score locally
+      let weighted_sum = 0;
+      const max_possible = 40; // Total weights sum
+      
+      for (let i = 0; i < 10; i++) {
+          const val = formData.get(`q${i}`);
+          if (val === 'yes') {
+            weighted_sum += questionsData[i].weight;
+          }
+      }
+      
+      const score = Math.round((weighted_sum / max_possible) * 100);
+      
+      let tier = "Balanced";
+      let statusColor = "#10B981"; // green
+      let glowColor = "rgba(16, 185, 129, 0.5)";
+
+      if (score >= 31 && score <= 60) {
+          tier = "Stress Zone";
+          statusColor = "#F59E0B"; // yellow
+          glowColor = "rgba(245, 158, 11, 0.5)";
+      } else if (score > 60) {
+          tier = "Toxic Zone";
+          statusColor = "#EF4444"; // red
+          glowColor = "rgba(239, 68, 68, 0.5)";
+      }
+
+      const payload = {
+        name: name,
+        score: score,
+        tier: tier,
+        statusColor: statusColor,
+        glowColor: glowColor,
+        timestamp: Date.now()
+      };
+
+      try {
+        await database.ref('presentations/audience/scores').push(payload);
+        
+        document.getElementById('successMsg').style.display = 'block';
+        submitBtn.style.display = 'none';
+        
+        // Disable all inputs
+        document.querySelectorAll('input').forEach(input => input.disabled = true);
+      } catch (err) {
+        console.error(err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Again";
+        alert("Failed to connect to Firebase database.");
+      }
+    });
+  </script>
+</body>
+</html>
