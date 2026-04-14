@@ -1,1255 +1,788 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind & Media — Understanding How Social Media Shapes Human Psychology</title>
-<meta name="description" content="A comprehensive presentation exploring the intersection of social media platforms and human psychology, covering active inference, mental health impacts, and cognitive mechanisms.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
-<style>
-/* ========== ROOT VARIABLES ========== */
-:root {
-  /* === 3-LAYER DEPTH SYSTEM === */
-  --layer-1: #08080E;          /* Background */
-  --layer-2: #111118;          /* Cards/containers */
-  --layer-3: #1A1A24;          /* Active/highlighted */
-  --bg-primary: var(--layer-1);
-  --bg-secondary: var(--layer-1);
-  --bg-card: var(--layer-2);
-  --bg-card-hover: var(--layer-3);
-  --text-primary: #F5F5F7;
-  --text-secondary: rgba(255,255,255,0.75);
-  --text-muted: rgba(255,255,255,0.4);
-  /* === INTENTIONAL COLOR SYSTEM === */
-  --color-brain: #C084FC;      /* Psychology/brain concepts */
-  --color-data: #60A5FA;       /* Stats, numbers, data */
-  --color-danger: #F472B6;     /* Warnings, impact moments */
-  --accent-primary: var(--color-data);
-  --accent-success: #10b981;
-  --accent-warning: #f59e0b;
-  --gradient-primary: linear-gradient(135deg, var(--color-brain) 0%, var(--color-data) 100%);
-  --gradient-hero: var(--layer-1);
-  --border-subtle: rgba(255,255,255,0.10);
-  --shadow-card: 0 8px 20px rgba(0,0,0,0.6);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --font-heading: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mind & Media Hero Concept</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400&display=swap');
 
-/* ========== RESET & BASE ========== */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; font-size: 22px; }
-@media (min-width: 1600px) { html { font-size: 26px; } }
-@media (min-width: 2000px) { html { font-size: 32px; } }
-body {
-  font-family: var(--font-body);
-  background: var(--layer-1);
-  color: var(--text-primary);
-  overflow: hidden;
-  line-height: 1.6;
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { width: 100%; height: 100%; background-color: #020204; overflow: hidden; font-family: 'Sora', sans-serif; cursor: none; }
 
-/* ========== PROGRESS BAR ========== */
-#progress-bar {
-  position: fixed; top: 0; left: 0; height: 2px; z-index: 1000;
-  background: var(--accent-primary);
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 10px rgba(20,124,229,0.8);
-}
+    /* Ambient Light Leaks */
+    #ambient-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; background-color: #020204; }
+    .light-leak { position: absolute; border-radius: 50%; filter: blur(150px); opacity: 0.5; pointer-events: none; }
+    .leak-1 { width: 80vw; height: 80vw; top: -30vh; left: -20vw; background: radial-gradient(circle, rgba(20, 10, 48, 0.9) 0%, transparent 70%); animation: drift1 40s infinite linear; }
+    .leak-2 { width: 70vw; height: 70vw; bottom: -30vh; right: -20vw; background: radial-gradient(circle, rgba(14, 8, 38, 0.8) 0%, transparent 70%); animation: drift2 45s infinite linear; }
+    .leak-center { width: 60vw; height: 60vw; top: 20vh; left: 20vw; background: radial-gradient(circle, rgba(16, 12, 32, 0.8) 0%, transparent 70%); }
+    
+    @keyframes drift1 { 0% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(15%, 15%) rotate(180deg); } 100% { transform: translate(0, 0) rotate(360deg); } }
+    @keyframes drift2 { 0% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(-15%, -15%) rotate(-180deg); } 100% { transform: translate(0, 0) rotate(-360deg); } }
 
-/* ========== SLIDE COUNTER ========== */
-#slide-counter-wrapper {
-  position: fixed; bottom: 30px; right: 40px; z-index: 1000;
-  display: flex; flex-direction: row; align-items: center; gap: 12px;
-}
-.apple-keynote-tag {
-  display: flex; align-items: center; gap: 4px;
-  font-family: var(--font-heading); font-size: 11px; font-weight: 700;
-  color: rgba(255,255,255,0.4); letter-spacing: 0.08em;
-}
-#slide-counter {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; 
-  font-size: 12px; font-weight: 500; margin-right: 4px;
-  color: rgba(255,255,255,0.6); letter-spacing: 1px;
-}
+    #bg-canvas, #noise-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    #noise-canvas { width: 150vw; height: 150vh; opacity: 0.025; z-index: 1; mix-blend-mode: overlay; will-change: transform; }
 
-/* ========== NAV ARROWS ========== */
-.nav-arrow {
-  position: fixed; top: 50%; z-index: 1000;
-  width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border-radius: 50%; cursor: pointer; display: flex;
-  align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.7); font-size: 1.2rem;
-  transition: var(--transition-smooth);
-  opacity: 1;
-  will-change: transform, background-color;
-  transform: translateZ(0);
-}
-.nav-arrow:hover {
-  background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.22);
-  color: #fff; transform: translateY(-50%) scale(1.05) translateZ(0);
-}
-#prev-btn { left: 20px; transform: translateY(-50%) translateZ(0); }
-#next-btn { right: 20px; transform: translateY(-50%) translateZ(0); }
+    #vignette {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(2,2,4,0.85) 100%);
+    }
 
-/* ========== FULLSCREEN TOGGLE ========== */
-#fullscreen-btn {
-  position: fixed; top: 30px; right: 40px; z-index: 1000;
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 1px solid var(--border-subtle);
-  background: rgba(255,255,255,0.03); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  cursor: pointer; display: flex; align-items: center;
-  justify-content: center; color: var(--text-muted);
-  font-size: 1.1rem; transition: var(--transition-smooth);
-}
-#fullscreen-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+    #text-layer {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; pointer-events: none;
+    }
 
-/* ========== SLIDE CONTAINER ========== */
-#slides-container {
-  width: 100vw; height: 100vh; position: relative; overflow: hidden;
-}
-/* Frame border removed for clean minimalism */
-.slide {
-  position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden;
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 60px 80px;
-  opacity: 0; visibility: hidden;
-  transform: translate3d(80px, 0, 0) scale(0.98);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
-  will-change: transform, opacity;
-}
-.slide.active {
-  opacity: 1; visibility: visible;
-  transform: translate3d(0, 0, 0) scale(1);
-}
-.slide.exit-next {
-  opacity: 0; visibility: hidden;
-  transform: translate3d(-80px, 0, 0) scale(0.98);
-}
-.slide.exit-prev {
-  opacity: 0; visibility: hidden;
-  transform: translate3d(80px, 0, 0) scale(0.98);
-}
-.slide.enter-prev {
-  transform: translate3d(-80px, 0, 0) scale(0.98);
-}
+    #title-container { position: relative; }
 
-/* Decorative blobs removed — clean background only */
+    #title {
+      font-family: 'Bebas Neue', cursive; font-size: 7vw; color: #F5F5F5;
+      margin: 0; line-height: 1; white-space: nowrap; text-transform: uppercase;
+      position: relative;
+    }
 
-/* ========== ANIMATION ENGINE ========== */
-.animate { animation-fill-mode: both; will-change: transform, opacity; }
+    #title span {
+      display: inline-block; opacity: 0; filter: blur(4px); letter-spacing: 18px;
+      transition: opacity 2.8s cubic-bezier(0.12, 0, 0.39, 0), filter 2.8s cubic-bezier(0.12, 0, 0.39, 0), letter-spacing 2.8s cubic-bezier(0.12, 0, 0.39, 0);
+    }
+    
+    .title-arrive { opacity: 1 !important; filter: blur(0px) !important; letter-spacing: 2px !important; }
 
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
-}
+    .glitch-slice {
+      position: absolute; top: 0; left: 0; font-family: 'Bebas Neue', cursive; font-size: 7vw; color: #F5F5F5;
+      line-height: 1; white-space: nowrap; text-transform: uppercase; letter-spacing: 2px;
+    }
 
-@keyframes standardReveal {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+    #underline {
+      height: 1px; width: 0%; background: rgba(192, 132, 252, 0.4); margin-top: 5px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-@keyframes heroReveal {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+    #subtitle {
+      font-family: 'Sora', sans-serif; font-weight: 300; font-size: 1.4vw; color: #C084FC;
+      margin-top: 1.5vh; opacity: 0; text-align: center; max-width: 80%; white-space: nowrap;
+    }
 
-@keyframes pulseGlow {
-  0% { border-color: rgba(96, 165, 250, 0.4); box-shadow: none; }
-  50% { border-color: rgba(96, 165, 250, 1); box-shadow: 0 0 20px rgba(96, 165, 250, 0.5); }
-  100% { border-color: rgba(96, 165, 250, 0.4); box-shadow: none; }
-}
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    #cursor { display: inline-block; animation: blink 500ms infinite; }
 
-/* Slide 1 Timings */
-@keyframes fadeHold { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slamUp { 
-  0% { opacity: 0; transform: translateY(120px); } 
-  100% { opacity: 1; transform: translateY(0); } 
-}
-@keyframes drawLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .distortion-bar { position: absolute; left: 0; width: 100vw; background: rgba(255, 255, 255, 0.12); pointer-events: none; }
 
-.slide.active .hero-label { animation: fadeHold 1.5s ease 1.0s both; }
-.slide.active .hero-title-slam { animation: slamUp 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 1.5s both; }
-.slide.active .hero-line-draw { transform-origin: left; animation: drawLine 0.6s cubic-bezier(0.16, 1, 0.3, 1) 2.0s both; }
-.slide.active .hero-subtitle-fade { animation: fadeHold 0.8s ease 2.4s both; }
-.slide.active .hero-meta-fade { animation: fadeHold 0.5s ease 3.0s both; }
+    #flash {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff;
+      z-index: 999; pointer-events: none; opacity: 0;
+    }
 
-/* Global Reveal System */
-.slide.active .reveal { animation: standardReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.slide.active .hero-reveal { animation: heroReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+    #hint-text {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      font-family: 'Sora', sans-serif; font-size: 11px; color: rgba(255,255,255,0.25);
+      letter-spacing: 3px; opacity: 0; transition: opacity 2s ease; z-index: 20; pointer-events: none;
+    }
 
-.delay-00 { animation-delay: 0.0s !important; }
-.delay-02 { animation-delay: 0.2s !important; }
-.delay-04 { animation-delay: 0.4s !important; }
-.delay-06 { animation-delay: 0.6s !important; }
-.delay-08 { animation-delay: 0.8s !important; }
-.delay-10 { animation-delay: 1.0s !important; }
+    /* Custom Cursor */
+    #custom-cursor {
+      position: fixed; width: 12px; height: 12px; border: 1px solid rgba(192,132,252,0.6);
+      border-radius: 50%; pointer-events: none; z-index: 9999; opacity: 0; transition: opacity 0.5s;
+      transform: translate(-50%, -50%);
+    }
 
-.slide.active .zone-2-pulse { animation: standardReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both, pulseGlow 0.8s ease 1.1s both; }
-
-.slide.fast-forward * {
-  animation-duration: 0.01s !important;
-  animation-delay: 0s !important;
-}
-
-/* ========== TYPOGRAPHY ========== */
-.slide-label {
-  font-size: 11px; font-weight: 300; letter-spacing: 7px;
-  text-transform: uppercase; color: rgba(255,255,255,0.35);
-  margin-bottom: 16px; opacity: 0;
-  animation: fadeUp 0.6s ease forwards;
-  animation-delay: 0.2s;
-}
-
-
-.slide-title {
-  font-family: var(--font-heading); font-size: clamp(2.8rem, 5vw, 3.4rem);
-  font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
-  color: var(--text-primary);
-  text-align: center; margin-bottom: 20px;
-;
-}
-
-
-.slide-subtitle {
-  font-size: clamp(1rem, 1.8vw, 1.2rem); color: var(--text-secondary);
-  font-weight: 300; text-align: center; max-width: 700px;
-  line-height: 1.6;
-;
-}
-
-
-/* ========== CONTENT LAYOUTS ========== */
-.content-row {
-  display: flex; gap: 40px; width: 100%; max-width: 1200px;
-  align-items: flex-start; justify-content: center;
-  margin-top: 40px;
-;
-}
-
-
-.content-col {
-  flex: 1; display: flex; flex-direction: column; gap: 16px;
-}
-
-/* ========== CARDS ========== */
-.card {
-  background: var(--layer-2); border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: var(--shadow-card);
-  border-radius: var(--radius-md); padding: 28px;
-  transition: var(--transition-smooth); position: relative; overflow: hidden;
-  will-change: transform;
-  transform: translateZ(0); 
-}
-.card:hover {
-  background: var(--layer-3);
-}
-.card-icon {
-  width: 48px; height: 48px; display: flex;
-  align-items: center; justify-content: center;
-  font-size: 1.4rem; margin-bottom: 14px;
-}
-.card-title {
-  font-size: 1.1rem; font-weight: 700; margin-bottom: 8px;
-  color: var(--text-primary);
-}
-.card-text {
-  font-size: 0.85rem; color: var(--text-secondary);
-  line-height: 1.6; font-weight: 300;
-}
-
-/* ========== 3-COL CARDS ========== */
-.cards-row {
-  display: flex; gap: 24px; width: 100%; max-width: 1100px;
-  margin-top: 40px;
-;
-}
-
-.cards-row .card { flex: 1; text-align: left; }
-.cards-row .card-icon { margin: 0 0 14px 0; }
-
-/* ========== STAT BOX ========== */
-.stat-box {
-  background: transparent; border: none; border-left: 2px solid var(--accent-primary);
-  border-radius: 0; padding: 10px 0 10px 24px; text-align: left;
-  position: relative; overflow: hidden;
-}
-.stat-number {
-  font-family: var(--font-heading); font-size: clamp(4rem, 8vw, 7rem);
-  font-weight: 800; color: var(--accent-primary);
-  line-height: 1; position: relative;
-}
-.stat-label {
-  font-size: 1rem; color: var(--text-secondary); margin-top: 4px;
-  font-weight: 400; position: relative; line-height: 1.7;
-}
-
-/* ========== BULLET POINTS ========== */
-.bullet-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-.bullet-list li {
-  display: flex; align-items: flex-start; gap: 14px;
-  font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;
-  font-weight: 300;
-}
-.bullet-list li .icon {
-  width: 20px; height: 20px; min-width: 20px; display: flex;
-  align-items: center; justify-content: center;
-  margin-top: 3px; color: rgba(255,255,255,0.5);
-}
-
-/* ========== CALLOUT BOX ========== */
-.callout {
-  background: transparent; border-left: 2px solid rgba(255,255,255,0.2);
-  padding: 10px 24px; font-style: italic;
-  color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem;
-}
-
-/* ========== ZONE BAR ========== */
-.zone-bar {
-  display: flex; width: 100%; max-width: 900px; margin-top: 30px;
-  border-radius: var(--radius-md); overflow: hidden;
-  border: 1px solid var(--border-subtle);
-;
-}
-
-.zone {
-  flex: 1; padding: 30px 24px; text-align: center;
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 8px;
-}
-.zone-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
-.zone-desc { font-size: 0.9rem; color: var(--text-secondary); }
-.zone--boring { background: rgba(255,255,255,0.02); }
-.zone--boring .zone-label { color: #9ca3af; }
-.zone--sweet {
-  background: rgba(96,165,250,0.06); border-left: 1px solid rgba(96,165,250,0.3);
-  border-right: 1px solid rgba(96,165,250,0.3); flex: 1.4;
-}
-.zone--sweet .zone-label { color: var(--color-data); }
-.zone--anxiety { background: rgba(244,114,182,0.05); }
-.zone--anxiety .zone-label { color: var(--color-danger); }
-
-/* ========== IMAGE CONTAINER ========== */
-.img-container {
-  border-radius: 12px; overflow: hidden;
-  border: 1px solid var(--border-subtle); position: relative;
-  aspect-ratio: 4/3; width: 100%;
-}
-.img-container::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%);
-  pointer-events: none;
-}
-.img-container img {
-  width: 100%; height: 100%; object-fit: cover;
-}
-
-/* ========== BOTTOM BANNER ========== */
-.bottom-banner {
-  margin-top: 30px; padding: 16px 32px;
-  border-radius: var(--radius-md); text-align: center;
-  font-size: 0.85rem; color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-  background: var(--layer-2); max-width: 900px; width: 100%;
-;
-}
-
-.bottom-banner.warning {
-  border-color: rgba(245,158,11,0.3);
-  background: rgba(245,158,11,0.05);
-}
-.bottom-banner.warning .banner-icon { color: var(--accent-warning); }
-
-/* ========== FLOW CHART ========== */
-.flow {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  justify-content: center;
-}
-.flow-step {
-  background: var(--bg-card); border: 1px solid var(--border-subtle);
-  padding: 10px 18px; border-radius: var(--radius-sm);
-  font-size: 0.85rem; color: var(--text-secondary);
-}
-.flow-arrow { color: var(--color-data); font-size: 1.2rem; }
-
-/* ========== TWO-BOX DEBATE ========== */
-.debate-row {
-  display: flex; gap: 24px; width: 100%; max-width: 1000px;
-  margin-top: 30px;
-;
-}
-
-.debate-box {
-  flex: 1; border-radius: var(--radius-md); padding: 30px;
-  border: 1px solid var(--border-subtle); position: relative;
-}
-.debate-box--danger {
-  background: rgba(239,68,68,0.04);
-  border-color: rgba(239,68,68,0.2);
-}
-.debate-box--neutral {
-  background: rgba(6,182,212,0.04);
-  border-color: rgba(6,182,212,0.2);
-}
-.debate-tag {
-  display: inline-block; padding: 4px 12px; border-radius: 20px;
-  font-size: 0.65rem; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; margin-bottom: 14px;
-}
-.debate-tag--danger { background: rgba(239,68,68,0.15); color: #ef4444; }
-.debate-tag--neutral { background: rgba(96,165,250,0.15); color: var(--color-data); }
-.debate-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
-.debate-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
-
-/* ========== HERO SLIDE ========== */
-.hero-bg {
-  position: absolute; inset: 0; background: var(--gradient-hero);
-  overflow: hidden;
-}
-.hero-content {
-  position: relative; z-index: 2; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 20px;
-  transform: translateY(-5vh);
-}
-.hero-title {
-  font-family: var(--font-heading);
-  font-size: clamp(4rem, 6vw, 5rem);
-  font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
-  color: var(--text-primary);
-;
-}
-
-
-.hero-subtitle {
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  color: var(--text-secondary); font-weight: 300;
-  max-width: 650px; line-height: 1.7;
-;
-}
-
-
-.hero-meta {
-  font-size: 0.95rem; color: rgba(255,255,255,0.55); font-weight: 400;
-  letter-spacing: 1px; margin-top: 20px;
-;
-}
-
-
-.hero-line {
-  width: 40px; height: 3px; background: var(--accent-primary);
-  border-radius: 2px; margin: 8px 0;
-  opacity: 0;
-;
-}
-
-
-/* ========== TAKEAWAY GRID ========== */
-.takeaway-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 20px; width: 100%; max-width: 1100px;
-  margin-top: 35px;
-;
-}
-
-.takeaway-card {
-  background: var(--layer-2); border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md); padding: 24px; text-align: center;
-  transition: var(--transition-smooth);
-}
-.takeaway-card:hover {
-  background: var(--layer-3);
-}
-.takeaway-icon {
-  font-size: 2rem; margin-bottom: 12px;
-}
-.takeaway-title {
-  font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;
-}
-.takeaway-desc {
-  font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;
-}
-
-/* ========== THANK YOU SLIDE ========== */
-.thankyou-content {
-  text-align: center; display: flex; flex-direction: column;
-  align-items: center; gap: 24px; position: relative; z-index: 2;
-}
-.thankyou-title {
-  font-family: var(--font-heading);
-  font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 900;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-;
-}
-
-
-/* ========== HOOKLINE ========== */
-.hookline {
-  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
-  color: var(--text-secondary); font-style: italic;
-  text-align: center; max-width: 700px; line-height: 1.7;
-  padding: 18px 30px; border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle); background: var(--bg-card);
-  margin-top: 20px;
-;
-}
-
-
-/* ========== ANIMATIONS ========== */
-@keyframes fadeUp {
-  from {
- }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ========== STAGGER CHILDREN ========== */
-.slide.active .stagger > * {
-  opacity: 0; animation: fadeUp 0.5s ease forwards;
-}
-.slide.active .stagger > *:nth-child(1) { animation-delay: 0.4s; }
-.slide.active .stagger > *:nth-child(2) { animation-delay: 0.5s; }
-.slide.active .stagger > *:nth-child(3) { animation-delay: 0.6s; }
-.slide.active .stagger > *:nth-child(4) { animation-delay: 0.7s; }
-.slide.active .stagger > *:nth-child(5) { animation-delay: 0.8s; }
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 900px) {
-  .slide { padding: 40px 30px; }
-  .content-row, .debate-row, .cards-row { flex-direction: column; gap: 24px; }
-  .takeaway-grid { grid-template-columns: 1fr; }
-  .zone-bar { flex-direction: column; }
-  #prev-btn { left: 10px; }
-  #next-btn { right: 10px; }
-  .nav-arrow { width: 38px; height: 38px; font-size: 1rem; }
-  #slide-counter { right: 20px; bottom: 20px; }
-  #autoplay-btn { left: 20px; bottom: 20px; }
-}
-
-/* ========== PRINT ========== */
-@media print {
-  body { overflow: visible; }
-  .slide {
-    position: relative; opacity: 1 !important; visibility: visible !important;
-    transform: none !important; page-break-after: always;
-    height: 100vh; width: 100vw;
-  }
-  .nav-arrow, #progress-bar, #slide-counter, #autoplay-btn { display: none; }
-}
-
-/* ========== LEADERBOARD GRID ========== */
-#leaderboard-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  width: 100%;
-  max-width: 1200px;
-  padding: 0;
-}
-.leaderboard-card {
-  display: flex; align-items: center; justify-content: space-between;
-  background: var(--bg-card); border: 1px solid var(--border-subtle);
-  border-radius: 10px; padding: 10px 14px;
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  position: relative; overflow: hidden;
-  min-height: 0;
-}
-.leaderboard-card::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-  background: var(--card-color, #10b981);
-}
-.leaderboard-name {
-  font-size: 0.7rem; font-weight: 700; color: var(--text-primary);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  max-width: 120px; padding-left: 6px;
-}
-.leaderboard-score { 
-  font-family: var(--font-heading); font-size: 0.85rem; font-weight: 900; 
-  color: var(--card-color, #10b981);
-  font-variant-numeric: tabular-nums; white-space: nowrap;
-}
-@keyframes slideUpFade {
-  from {
- }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
+  </style>
 </head>
 <body>
-
-<!-- Progress Bar -->
-<div id="progress-bar" style="width: 0%"></div>
-
-<!-- Navigation -->
-<button class="nav-arrow" id="prev-btn" aria-label="Previous Slide">&#8592;</button>
-<button class="nav-arrow" id="next-btn" aria-label="Next Slide">&#8594;</button>
-
-<!-- Slide Counter -->
-<div id="slide-counter-wrapper">
-  <div class="apple-keynote-tag">
-    <span style="font-size: 1.3em;">&#xF8FF;</span> KEYNOTE
+  <div id="ambient-container">
+    <div class="light-leak leak-1"></div>
+    <div class="light-leak leak-2"></div>
+    <div class="light-leak leak-center"></div>
   </div>
-  <div id="slide-counter"><span class="current">01</span> / <span id="total">15</span></div>
-</div>
-
-<!-- Fullscreen Toggle -->
-<button id="fullscreen-btn" aria-label="Toggle Full Screen" title="Full Screen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
-
-<!-- =============================== SLIDES =============================== -->
-<div id="slides-container">
-
-  <!-- ===== SLIDE 1 — HERO ===== -->
-  <section class="slide active" id="slide-1" style="background: #000000;">
-    <div class="hero-bg"></div>
-    <div class="animate hero-meta-fade" style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.30);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <div class="hero-content">
-      <div class="animate hero-label" style="font-size: 11px; font-weight: 300; letter-spacing: 7px; text-transform: uppercase; color: rgba(255,255,255,0.35); padding: 8px 0;">A Psychology Presentation</div>
-      <h1 class="hero-title animate hero-title-slam" style="font-size: clamp(6rem, 9vw, 8rem); letter-spacing: -0.03em; background: linear-gradient(to right, #C084FC, #ffffff 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Mind &amp; Media</h1>
-      <div class="hero-line animate hero-line-draw" style="height: 3px; width: 60px; background: linear-gradient(to right, #C084FC, #F472B6);"></div>
-      <p class="hero-subtitle animate hero-subtitle-fade" style="letter-spacing: 0.5px;">Understanding How Social Media Shapes Human Psychology</p>
-      <p class="hero-meta animate hero-meta-fade" style="opacity: 0.30;">April 2026</p>
+  <canvas id="bg-canvas"></canvas>
+  <canvas id="noise-canvas"></canvas>
+  <div id="distortion-container"></div>
+  <div id="vignette"></div>
+  
+  <div id="text-layer">
+    <div id="title-container">
+      <h1 id="title"></h1>
+      <div id="underline"></div>
     </div>
-    <div id="kbd-instruction" class="animate hero-meta-fade" style="position:absolute; bottom: 40px; font-size: 12px; color: rgba(255,255,255,0.5); opacity: 0; transition: opacity 2s ease;">Press → to begin</div>
-    <script>setTimeout(() => { const el = document.getElementById('kbd-instruction'); if(el) el.style.opacity = '0'; }, 8000);</script>
-  </section>
+    <h2 id="subtitle"></h2>
+  </div>
 
-  <!-- ===== SLIDE 1a — AGENDA ===== -->
-  <section class="slide" id="slide-1a">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal" style="padding-top: 20px;">Agenda</h2>
-    <div class="content-row">
-      <div class="content-col" style="align-items: center;">
-        <ul class="bullet-list stagger animate reveal" style="width: 100%; max-width: 600px; gap: 0;">
-          <li class="animate reveal delay-02" style="border-left: 3px solid var(--accent-primary); padding-left: 20px; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.2); align-items: center;"><span class="icon" style="color:var(--accent-primary)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></span> <span style="font-size:1.2rem;">The Evidence: Impact on the Mind</span></li>
-          <li class="animate reveal delay-04" style="border-left: 3px solid #C084FC; padding-left: 20px; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.2); align-items: center;"><span class="icon" style="color:#C084FC"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span> <span style="font-size:1.2rem;">The Algorithm Advantage</span></li>
-          <li class="animate reveal delay-06" style="border-left: 3px solid #F472B6; padding-left: 20px; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.2); align-items: center;"><span class="icon" style="color:#F472B6"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span> <span style="font-size:1.2rem;">Active Inference Framework</span></li>
-          <li class="animate reveal delay-08" style="border-left: 3px solid #10b981; padding-left: 20px; padding-bottom: 24px; border-bottom: 1px solid transparent; align-items: center;"><span class="icon" style="color:#10b981"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span> <span style="font-size:1.2rem;">The Digital Crowbar &amp; Solutions</span></li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  <div id="flash"></div>
+  <div id="hint-text">PRESS SPACE OR → TO CONTINUE</div>
+  <div id="custom-cursor"></div>
 
-  <!-- ===== SLIDE 2 — WHAT IS MIND & MEDIA? ===== -->
-  <section class="slide" id="slide-2">
-    <h2 class="slide-title animate hero-reveal">What is Mind &amp; Media?</h2>
-    <div class="content-row" style="flex-direction: row; display: flex; gap: 40px; width: 100%; max-width: 1000px;">
-      <div class="content-col" style="flex:1;">
-        <div class="card animate reveal" style="border-top: 1px solid rgba(192, 132, 252, 0.4);">
-          <div class="card-title" style="font-weight:800; font-size:1.3rem; color: #C084FC;">Mind</div>
-          <div class="card-text" style="font-size: 0.9rem;">Think · Feel · Perceive · Decide<br>Controls memory, emotions &amp; identity</div>
-        </div>
-      </div>
-      <div class="content-col" style="flex:1;">
-        <div class="card animate reveal" style="border-top: 1px solid rgba(96, 165, 250, 0.4);">
-          <div class="card-title" style="font-weight:800; font-size:1.3rem; color: #60A5FA;">Media</div>
-          <div class="card-text" style="font-size: 0.9rem;">Platforms for sharing content<br>Instagram · Facebook · Snapchat · YouTube</div>
-        </div>
-      </div>
-    </div>
-    <div class="hookline animate reveal" style="color: rgba(255,255,255,0.7); border: none; border-left: 1px solid rgba(255,255,255,0.1); font-size: 1.15rem; font-style: italic; padding: 20px 30px; background: transparent; max-width: 700px;">
-      "What happens when the most complex organ meets the most addictive machine?"
-    </div>
-  </section>
+  <script>
+    // ==========================================
+    // AUDIO CONTEXT
+    // ==========================================
+    let audioCtx = null;
+    let userInteracted = false;
+    window.addEventListener('click', () => { userInteracted = true; });
+    window.addEventListener('keydown', () => { userInteracted = true; });
 
-  <!-- ===== SLIDE 3 — IMPACT ===== -->
-  <section class="slide" id="slide-3">
-    <h2 class="slide-title animate hero-reveal">The Impact of Media on Mind</h2>
-    <div class="content-row">
-      <div class="content-col" style="flex:0.8; padding-right: 30px;">
-        <ul class="bullet-list stagger animate reveal" style="gap: 14px;">
-          <li>Body image distortion in teens</li>
-          <li>Depression &amp; anxiety symptoms</li>
-          <li>Instagram ranked worst for mental health</li>
-          <li>Girls more affected than boys</li>
-          <li>"Snapchat Surgery" phenomenon</li>
-        </ul>
-      </div>
-      <div class="content-col" style="flex: 1.5; align-items: center; justify-content: center;">
-        <div style="text-align: center;">
-          <svg viewBox="0 0 36 36" style="width: 320px; height: 320px; margin: 0 auto; display: block; overflow: visible; filter: drop-shadow(0 0 30px rgba(96, 165, 250, 0.35));">
-            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2.5"/>
-            <path stroke-dasharray="48, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="url(#gradientDonut)" stroke-width="2.5" stroke-linecap="round" style="animation: drawDonut 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;"/>
-            <defs><linearGradient id="gradientDonut" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#60A5FA" /><stop offset="100%" stop-color="#C084FC" /></linearGradient></defs>
-            <text id="counter-48" x="18" y="20.5" style="fill:#fff; font-family:var(--font-heading); font-size:13px; font-weight:900; text-anchor:middle;">48%</text>
-          </svg>
-          <style>@keyframes drawDonut { 0% { stroke-dasharray: 0, 100; opacity: 0; } 100% { stroke-dasharray: 48, 100; opacity: 1; } }</style>
-          <div style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-top: 20px; font-weight: 300;">felt pressured to consider<br>cosmetic surgery</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 4 — TWO SIDES ===== -->
-  <section class="slide" id="slide-4">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal">Two Sides of the Debate</h2>
-    <div class="debate-row animate reveal">
-      <div class="card animate reveal" style="border: 1px solid rgba(255,255,255,0.1); border-top: 1px solid rgba(239,68,68,0.5); padding: 40px; flex: 1;">
-        <div class="card-title" style="font-size: 1.3rem; color: #ef4444;">Alarmists</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">RSPH · Twenge</div>
-        <div style="font-style: italic; font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">“Social media has destroyed a generation”</div>
-        <div class="card-text">Linked to addiction, depression, low self-esteem &amp; body image distortions.</div>
-      </div>
-      <div class="card animate reveal" style="border: 1px solid rgba(255,255,255,0.1); border-top: 1px solid rgba(96,165,250,0.5); padding: 40px; flex: 1;">
-        <div class="card-title" style="font-size: 1.3rem; color: #60A5FA;">Skeptics</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">Orben 2019 · Frost</div>
-        <div style="font-style: italic; font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">“Effects are small &amp; nuanced”</div>
-        <div class="card-text">Studies criticized for poor quality, small effect sizes, weak measures.</div>
-      </div>
-    </div>
-    <div class="bottom-banner animate reveal" style="border: 1px solid rgba(255,255,255,0.1); background: var(--layer-2); color: #fff;">
-      <span style="color:#ef4444; font-weight: 500;">Passive use = Danger</span> <span style="color: rgba(255,255,255,0.3); margin: 0 12px;">•</span> <span style="color:#10b981; font-weight: 500;">Active use = Safer</span>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 5 — ALGORITHM ADVANTAGE ===== -->
-  <section class="slide" id="slide-5">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal">The Algorithm Advantage</h2>
-    <div class="content-row" style="margin-top: 20px;">
-      <div class="content-col" style="justify-content: center; flex: 1;">
-        <ul class="bullet-list stagger animate reveal">
-          <li>Algorithms show only what you want to see</li>
-          <li>Doomscrolling keeps you in infinite loops</li>
-          <li><strong style="color:#C084FC; font-weight:700;">FOMO</strong> — compulsive checking</li>
-          <li>Brain overfilled with curated fantasy</li>
-          <li>Real world becomes "noisy, messy data"</li>
-        </ul>
-      </div>
-      <div class="content-col" style="flex: 1.2;">
-        <div class="img-container" style="height: 380px; position:relative; overflow:hidden; border-radius: 12px;">
-          <img src="phone-dark.png" alt="Person scrolling phone in dark room" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
-          <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 30%, rgba(8,8,14,0.9) 100%); z-index: 1;"></div>
-          <div style="position: absolute; inset: 0; background: rgba(192, 132, 252, 0.1); z-index: 2;"></div>
-          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 30px; color: rgba(255,255,255,0.6); font-size: 0.9rem; font-style: italic; z-index: 10;">The Exploit Trap</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 6 — MIND'S MECHANICS ===== -->
-  <section class="slide" id="slide-6">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal" style="margin-bottom:10px;">The Mind's Mechanics</h2>
-    <p class="slide-subtitle" style="text-align:center; max-width:800px; margin: 24px auto; font-size: 1.15rem;">The brain is a prediction engine — constantly guessing what comes next &amp; minimizing surprise</p>
-    <div class="cards-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; max-width: 1100px;">
-      <div class="card animate reveal" style="border-top: 1px solid rgba(96,165,250,0.5);">
-        <div class="card-title" style="color: #60A5FA;">The Guesser</div>
-        <div class="card-text">Brain makes predictions about sensory signals it encounters in the world</div>
-      </div>
-      <div class="card animate reveal" style="border-top: 1px solid rgba(192,132,252,0.5);">
-        <div class="card-title" style="color: #C084FC;">The Rulebook</div>
-        <div class="card-text">Generative model — your structured understanding of statistical regularities</div>
-      </div>
-      <div class="card animate reveal" style="border-top: 1px solid rgba(244,114,182,0.5);">
-        <div class="card-title" style="color: #F472B6;">The Alarm</div>
-        <div class="card-text">Prediction error — the gap between what's expected and what actually arrives</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 7 — GOLDILOCKS ZONE ===== -->
-  <section class="slide" id="slide-7">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal">The Goldilocks Zone</h2>
-    <p class="slide-subtitle">We seek manageable uncertainty — resolving it feels rewarding</p>
-    <div class="zone-bar animate reveal zone-1">
-      <div class="zone zone--boring" style="background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.1);">
-        <div class="zone-label" style="text-transform:none; letter-spacing:1px; font-size:1rem;">Zone 1</div>
-        <div class="zone-desc">Too predictable<br><strong style="font-weight:700;">= Boring</strong></div>
-      </div>
-      <div class="zone zone--sweet" style="flex:1.8; transform: scale(1.15); z-index:2; background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.5); box-shadow: 0 0 40px rgba(96,165,250,0.3);">
-        <div class="zone-label" style="text-transform:none; letter-spacing:1px; font-size:1.15rem; color: #fff; font-weight: 700;">Zone 2 — Sweet Spot</div>
-        <div class="zone-desc" style="color: rgba(255,255,255,0.7);">Manageable uncertainty<br><br><span style="color: #60A5FA; font-weight: 700;">Social media locks you here</span></div>
-      </div>
-      <div class="zone zone--anxiety" style="background: rgba(244,114,182,0.05); border-left: 1px solid rgba(244,114,182,0.3);">
-        <div class="zone-label" style="text-transform:none; letter-spacing:1px; font-size:1rem; color: #F472B6;">Zone 3</div>
-        <div class="zone-desc">Too unpredictable<br><strong style="font-weight:700; color: #F472B6;">= Anxiety</strong></div>
-      </div>
-    </div>
-    <div class="bottom-banner animate reveal" style="border: 1px solid rgba(255,255,255,0.1); background: var(--layer-2); color: var(--text-secondary);">
-      Real life starts feeling like Zone 3 because of Zone 2 overload
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 8 — EXPLORE VS EXPLOIT ===== -->
-  <section class="slide" id="slide-8">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal">Explore vs Exploit Paralysis</h2>
-    <div class="content-row">
-      <div class="content-col" style="flex: 1;">
-        <ul class="bullet-list stagger animate reveal">
-          <li><span style="font-size: 1rem;"><strong style="color:#60A5FA; font-weight:700;">Explore</strong> = try new, uncertain things</span></li>
-          <li><span style="font-size: 1rem;"><strong style="color:#C084FC; font-weight:700;">Exploit</strong> = safe, easy, known rewards</span></li>
-          <li>Social media = easiest exploit available</li>
-          <li><strong style="color:#C084FC; font-weight:700;">Procrastination</strong> = exploit mode on repeat</li>
-          <li><strong style="color:#F472B6; font-weight:700;">Brain Rot</strong> = cognitive decay from low-effort content</li>
-          <li>Real life starts feeling too hard</li>
-        </ul>
-      </div>
-      <div class="content-col" style="flex: 1; padding-left: 40px;">
-        <div style="font-style: italic; font-size: 1rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 40px;">
-          Ever told yourself you'd talk to someone new, start that project, or go outside — but then kept scrolling instead? That's the exploit trap.
-        </div>
-        <div style="text-align: left;">
-          <div id="counter-25" style="font-family: var(--font-heading); font-size: clamp(4rem, 8vw, 6rem); font-weight: 800; color: #60A5FA; line-height: 1;">2.5 hrs</div>
-          <div style="font-size: 1rem; color: var(--text-secondary); margin-top: 8px; font-weight: 300;">average daily social media time globally</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 9 — DIGITAL CROWBAR ===== -->
-  <section class="slide" id="slide-9">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal">The Digital Crowbar</h2>
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 800px; text-align: center; gap: 50px; margin-top: 20px;">
-      <div>
-        <div style="font-family: var(--font-heading); font-size: clamp(8rem, 15vw, 12rem); font-weight: 900; color: #F472B6; line-height: 1; letter-spacing: -0.04em;">0%</div>
-        <div style="font-size: 1.2rem; line-height: 1.6; color: var(--text-secondary); font-weight: 300; max-width: 500px; margin: 16px auto 0;">Impact of disclaimer labels on how people feel.<br><span style="color: #F472B6; font-weight: 500;">Knowing it's fake doesn't protect you.</span></div>
-      </div>
-      <div style="display: flex; gap: 40px; text-align: left; width: 100%;">
-        <div style="flex: 1; border-left: 1px solid rgba(96,165,250,0.4); padding-left: 20px;"><span style="color: #60A5FA; font-family: monospace; font-size: 0.8rem;">01</span><br><span style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 300;">Brain is fed curated, fake evidence</span></div>
-        <div style="flex: 1; border-left: 1px solid rgba(192,132,252,0.4); padding-left: 20px;"><span style="color: #C084FC; font-family: monospace; font-size: 0.8rem;">02</span><br><span style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 300;">Filtered content distorts what's "normal"</span></div>
-        <div style="flex: 1; border-left: 1px solid rgba(244,114,182,0.4); padding-left: 20px;"><span style="color: #F472B6; font-family: monospace; font-size: 0.8rem;">03</span><br><span style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 300;">Your baseline gets forcibly updated</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 10 — INSIDE THE BRAIN ===== -->
-  <section class="slide" id="slide-10">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal">Inside the Brain</h2>
-    <div class="content-row" style="align-items: stretch;">
-      <div class="content-col" style="justify-content: center;">
-        <div class="card animate reveal" style="padding:30px; border-top: 1px solid rgba(96,165,250,0.5);">
-          <div class="card-title" style="color: #60A5FA;">Hippocampus</div>
-          <div class="card-text">Memory formation center<br>Damaged by chronic stress<br>Shrinks with heavy use</div>
-        </div>
-      </div>
-      <div class="content-col" style="align-items: center; justify-content: center; flex:1.5;">
-        <div class="img-container" style="position:relative; width: 100%; border-radius: 12px;">
-          <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80" alt="Brain neuroscience" loading="lazy" style="border-radius: 12px; width: 100%;">
-          <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.15); border-radius: 12px; z-index: 1;"></div>
-          <div style="position: absolute; inset: 0; background: rgba(192, 132, 252, 0.1); border-radius: 12px; z-index: 2;"></div>
-          <div style="position: absolute; top:45%; left:30%; border:1px dotted rgba(96,165,250,0.6); border-radius:50%; width: 90px; height: 90px; color:#fff; font-size:0.7rem; font-weight:700; display: flex; align-items: center; justify-content: center; text-shadow: 0 2px 4px rgba(0,0,0,0.8); animation: pulse 4s infinite; z-index: 3;">Hippocampus</div>
-          <div style="position: absolute; top:35%; right:15%; border:1px dotted rgba(192,132,252,0.6); border-radius:50%; width: 110px; height: 110px; color:#fff; font-size:0.7rem; font-weight:700; display: flex; align-items: center; justify-content: center; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.8); animation: pulse 4s infinite 1s; z-index: 3;">Prefrontal<br>Cortex</div>
-        </div>
-      </div>
-      <div class="content-col" style="justify-content: center;">
-        <div class="card animate reveal" style="padding:30px; border-top: 1px solid rgba(192,132,252,0.5);">
-          <div class="card-title" style="color: #C084FC;">Prefrontal Cortex</div>
-          <div class="card-text">Attention &amp; decision control<br>Weakened by dopamine<br>Erodes with constant use</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 11 — TOXIC STRESS ===== -->
-  <section class="slide" id="slide-11">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal">Toxic Stress</h2>
-    <div style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 1000px; gap: 50px; margin-top: 30px;">
-      <div style="display:flex; align-items: center; gap: 12px; width: 100%; justify-content: center; flex-wrap: nowrap;">
-        <span style="background: var(--layer-2); color: var(--text-secondary); border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding: 12px 20px; font-size: 0.9rem;">Harmful Content</span>
-        <span style="color: rgba(255,255,255,0.3); font-size: 1.5rem;">→</span>
-        <span style="background: var(--layer-2); color: #facc15; border:1px solid rgba(250,204,21,0.3); border-radius:20px; padding: 12px 20px; font-size: 0.9rem;">Stress Hormones</span>
-        <span style="color: rgba(255,255,255,0.3); font-size: 1.5rem;">→</span>
-        <span style="background: var(--layer-2); color: #f97316; border:1px solid rgba(249,115,22,0.3); border-radius:20px; padding: 12px 20px; font-size: 0.9rem;">Chronically Elevated</span>
-        <span style="color: rgba(255,255,255,0.3); font-size: 1.5rem;">→</span>
-        <span style="background: var(--layer-3); color: #F472B6; border:1px solid rgba(244,114,182,0.5); border-radius:20px; padding: 12px 20px; font-size: 0.9rem; font-weight: 500;">Damaged Connections</span>
-      </div>
-      <div style="text-align: center;">
-        <div style="font-family: var(--font-heading); font-size: clamp(5rem, 10vw, 8rem); font-weight: 900; color: #60A5FA; line-height: 1;">2×</div>
-        <div style="font-size: 1.1rem; color: var(--text-secondary); margin-top: 12px; font-weight: 300; line-height: 1.6;">Girls experience twice the rate<br>of depression &amp; anxiety</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 12 — THE FIX ===== -->
-  <section class="slide" id="slide-12">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal" style="margin-bottom: 30px;">The Fix: Move, Mindful, Connect</h2>
-    <div class="takeaway-grid animate reveal" style="grid-template-columns: repeat(2, 1fr); max-width: 1000px; gap: 16px; margin-top: 0;">
-      <div class="card animate reveal" style="border-top: 1px solid rgba(16,185,129,0.5); display:flex; align-items:flex-start; text-align:left; gap:20px; padding: 28px;">
-        <div>
-          <div class="card-title" style="color: #10b981;">Exercise Grows the Brain</div>
-          <div class="card-text">Walking consistently reduces depression risk.</div>
-        </div>
-      </div>
-      <div class="card animate reveal" style="border-top: 1px solid rgba(96,165,250,0.5); display:flex; align-items:flex-start; text-align:left; gap:20px; padding: 28px;">
-        <div>
-          <div class="card-title" style="color: #60A5FA;">Mindfulness &amp; Detox</div>
-          <div class="card-text">2-week detox shows dramatic improvements.</div>
-        </div>
-      </div>
-      <div class="card animate reveal" style="border-top: 1px solid rgba(244,114,182,0.5); display:flex; align-items:flex-start; text-align:left; gap:20px; padding: 28px;">
-        <div>
-          <div class="card-title" style="color: #F472B6;">Real Human Connection</div>
-          <div class="card-text">Face-to-face relationships build true resilience.</div>
-        </div>
-      </div>
-      <div class="card animate reveal" style="border-top: 1px solid rgba(192,132,252,0.5); display:flex; align-items:flex-start; text-align:left; gap:20px; padding: 28px;">
-        <div>
-          <div class="card-title" style="color: #C084FC;">Design Reforms</div>
-          <div class="card-text">Hide likes and mandate algorithmic transparency.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 12a — LIVE RESULTS ===== -->
-  <section class="slide" id="slide-12a">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <h2 class="slide-title animate hero-reveal" style="margin-bottom: 10px;">Vulnerability Leaderboard</h2>
-    <button id="manual-score-btn" style="position: absolute; bottom: 30px; right: 200px; opacity: 0.1; width: 40px; height: 40px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: transparent; border-radius: 5px; z-index: 50;
-; color: rgba(255,255,255,0.3);" onmouseover="this.style.opacity=0.6" onmouseout="this.style.opacity=0.1" title="Manual Fallback">+</button>
-    <button id="reset-leaderboard-btn" style="position: absolute; bottom: 30px; right: 250px; opacity: 0.2; padding: 10px 16px; cursor: pointer; border: 1px solid rgba(239,68,68,0.4); background: rgba(239,68,68,0.1); color: #ef4444; border-radius: 5px; z-index: 50;
-; font-family: var(--font-body); font-weight: 600; font-size: 0.8rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.2" title="Reset All Data">Reset Data</button>
-    <div style="width: 100%; max-width: 1200px; margin-top: 15px; flex: 1; display: flex; align-items: flex-start; justify-content: center;">
-      <div id="leaderboard-container">
-        <div id="live-score-status" style="grid-column: 1 / -1; text-align: center; margin-top: 40px; font-style: italic; color: rgba(255,255,255,0.5); font-size: 1.1rem;">Waiting for audience submissions...</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SLIDE 13 — THANK YOU ===== -->
-  <section class="slide" id="slide-13">
-    <div style="position:absolute; bottom: 30px; left: 40px; font-size: 10px; color: rgba(255,255,255,0.25);">SUVENDU AND RITESH — TRIDENT ACADEMY OF TECHNOLOGY</div>
-    <div class="hero-content">
-      <h1 class="hero-title animate hero-reveal">Thank You</h1>
-      <div class="hero-line" style="margin: 20px auto; width: 60px;"></div>
-      <p class="hero-subtitle animate reveal" style="font-weight:700;">SUVENDU AND RITESH<br><span style="font-size:0.85em; font-weight:400; opacity:0.8;">TRIDENT ACADEMY OF TECHNOLOGY</span></p>
-      <p class="hero-meta" style="text-transform: none; font-size: 1.1rem; letter-spacing: 0;">Presentation on Mind &amp; Media<br>April 2026</p>
-    </div>
-  </section>
-
-</div><!-- end slides-container -->
-
-<!-- =============================== JAVASCRIPT =============================== -->
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
-
-<script>
-(function() {
-  'use strict';
-
-  const slides = document.querySelectorAll('.slide');
-  const totalSlides = slides.length;
-  let currentSlide = 0;
-  let isTransitioning = false;
-
-  const progressBar = document.getElementById('progress-bar');
-  const counterCurrent = document.querySelector('#slide-counter .current');
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-  const fullscreenBtn = document.getElementById('fullscreen-btn');
-
-  function updateUI() {
-    progressBar.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
-    counterCurrent.textContent = String(currentSlide + 1).padStart(2, '0');
-  }
-
-  let sequenceFinished = true;
-  let sequenceTimeout = null;
-
-  function runCounters(slide) {
-    if (slide.id === 'slide-3') { // The "48%" slide
-      const counter48 = document.getElementById('counter-48');
-      if (counter48) animateCounter(counter48, 0, 48, 1500, false, '%');
-    } else if (slide.id === 'slide-9') { // The "2.5 hrs" slide
-      const counter25 = document.getElementById('counter-25');
-      if (counter25) animateCounter(counter25, 0.0, 2.5, 1500, true, ' hrs');
-    }
-  }
-
-  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-  function animateCounter(el, start, end, duration, decimals, suffix) {
-    let startTime = null;
-    function step(timestamp) {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const current = start + easeOutCubic(progress) * (end - start);
-      
-      if (decimals) {
-        el.textContent = current.toFixed(1) + suffix;
-      } else {
-        el.textContent = Math.round(current) + suffix;
-      }
-      
-      if (progress < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
-  function goToSlide(index, direction) {
-    if (isTransitioning || index === currentSlide || index < 0 || index >= totalSlides) return;
-    isTransitioning = true;
-
-    const oldSlide = slides[currentSlide];
-    const newSlide = slides[index];
-
-    // Remove fast-forward state globally before doing anything else
-    oldSlide.classList.remove('fast-forward');
-    newSlide.classList.remove('fast-forward');
-
-    clearTimeout(sequenceTimeout);
-    sequenceFinished = false;
-    // Set a broad 3.5 second window corresponding to max sequence time
-    sequenceTimeout = setTimeout(() => { sequenceFinished = true; }, 3500);
-
-    // Remove all transition states
-    oldSlide.classList.remove('active', 'exit-next', 'exit-prev', 'enter-prev');
-    newSlide.classList.remove('active', 'exit-next', 'exit-prev', 'enter-prev');
-
-    if (direction === 'next') {
-      oldSlide.classList.add('exit-next');
-    } else {
-      oldSlide.classList.add('exit-prev');
-      newSlide.classList.add('enter-prev');
-    }
-
-    // Force reflow specifically to reset CSS animations for backward navigation
-    void newSlide.offsetWidth;
-
-    newSlide.classList.add('active');
-    
-    runCounters(newSlide);
-    
-    // Remove enter state to trigger transition
-    if (direction === 'prev') {
-      newSlide.classList.remove('enter-prev');
-    }
-
-    currentSlide = index;
-    updateUI();
-
-    setTimeout(() => {
-      oldSlide.classList.remove('exit-next', 'exit-prev');
-      isTransitioning = false;
-    }, 600);
-  }
-
-  function nextSlide() {
-    // Skip-Ahead Safety Check
-    if (!sequenceFinished && !slides[currentSlide].classList.contains('fast-forward')) {
-      slides[currentSlide].classList.add('fast-forward');
-      sequenceFinished = true;
-      return;
-    }
-    if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1, 'next');
-  }
-
-  function prevSlide() {
-    if (currentSlide > 0) goToSlide(currentSlide - 1, 'prev');
-  }
-
-  function toggleFullscreen() {
-    let elem = document.documentElement;
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen().catch(e => console.log(e));
-      } else if (elem.webkitRequestFullscreen) { /* Safari */
-        elem.webkitRequestFullscreen();
-      }
-      fullscreenBtn.classList.add('active');
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) { /* Safari */
-        document.webkitExitFullscreen();
-      }
-      fullscreenBtn.classList.remove('active');
-    }
-  }
-
-  // Button clicks
-  nextBtn.addEventListener('click', nextSlide);
-  prevBtn.addEventListener('click', prevSlide);
-  fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-  // Keyboard
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
-  });
-
-  // Touch swipe
-  let touchStartX = 0;
-  let touchStartY = 0;
-  document.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-  }, { passive: true });
-  document.addEventListener('touchend', (e) => {
-    const dx = e.changedTouches[0].screenX - touchStartX;
-    const dy = e.changedTouches[0].screenY - touchStartY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {
-      if (dx < 0) nextSlide();
-      else prevSlide();
-    }
-  }, { passive: true });
-
-  // Live Polling Firebase Setup
-  const leaderboardContainer = document.getElementById('leaderboard-container');
-  const liveScoreStatus = document.getElementById('live-score-status');
-  const manualScoreBtn = document.getElementById('manual-score-btn');
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyB0N-F7chJjcaZxEEkSTKWYW6f78Czm-_E",
-    authDomain: "chatbot-ac0f5.firebaseapp.com",
-    databaseURL: "https://chatbot-ac0f5-default-rtdb.firebaseio.com",
-    projectId: "chatbot-ac0f5",
-    storageBucket: "chatbot-ac0f5.firebasestorage.app",
-    messagingSenderId: "807712096391",
-    appId: "1:807712096391:web:2224fa0b060ba9d398f822"
-  };
-
-  try {
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    
-    // Connect to Firebase Database
-    if (leaderboardContainer) {
-      const scoreRef = database.ref('presentations/audience/scores');
-
-      scoreRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          // Convert to array
-          const submissions = [];
-          for (let key in data) {
-            submissions.push({ id: key, ...data[key] });
-          }
-          
-          // Sort descending by score
-          submissions.sort((a, b) => b.score - a.score);
-          
-          renderLeaderboard(submissions);
-        } else {
-          // Cleared data
-          renderLeaderboard([]);
-          if (liveScoreStatus) liveScoreStatus.style.display = 'block';
-        }
-      });
-    }
-  } catch (err) {
-    console.warn("Firebase not initialized or missing config. Relying on manual fallback.", err);
-  }
-
-  // Track rendered IDs to prevent re-animating
-  const renderedIds = new Set();
-
-  function renderLeaderboard(submissions) {
-    if (submissions.length > 0 && liveScoreStatus) {
-      liveScoreStatus.style.display = 'none';
-    }
-    
-    let newHTML = '';
-    
-    submissions.forEach((sub, index) => {
-      const isNew = !renderedIds.has(sub.id);
-      if (isNew) renderedIds.add(sub.id);
-      
-      const animationStyle = isNew ? `animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: ${0.05 * Math.min(index, 5)}s;
-` : `opacity: 1; transform: translateY(0); animation: none;`;
-      
-      newHTML += `
-        <div class="leaderboard-card" style="--card-color: ${sub.statusColor || '#10b981'}; ${animationStyle}">
-          <div class="leaderboard-name">${sub.name}</div>
-          <div class="leaderboard-score">${sub.score}%</div>
-        </div>
-      `;
-    });
-    
-    leaderboardContainer.innerHTML = newHTML;
-  }
-
-  // Manual Fallback button logic
-  if (manualScoreBtn) {
-    manualScoreBtn.addEventListener('click', async () => {
-      const name = prompt("Manual Fallback: Enter Audience Name");
-      if (!name) return;
-      const input = prompt("Manual Fallback: Enter a score (0-100)");
-      if (input !== null && input !== "") {
-        const score = parseInt(input);
-        if (!isNaN(score) && score >= 0 && score <= 100) {
-          let tier = "Balanced";
-          let statusColor = "#10B981"; 
-          let glowColor = "rgba(16, 185, 129, 0.5)";
-
-          if (score >= 31 && score <= 60) {
-            tier = "Stress Zone";
-            statusColor = "#F59E0B";
-            glowColor = "rgba(245, 158, 11, 0.5)";
-          } else if (score > 60) {
-            tier = "Toxic Zone";
-            statusColor = "#EF4444";
-            glowColor = "rgba(239, 68, 68, 0.5)";
-          }
-          
-          try {
-             const database = firebase.database();
-             await database.ref('presentations/audience/scores').push({
-                name: name,
-                score: score,
-                tier: tier,
-                statusColor: statusColor,
-                glowColor: glowColor,
-                timestamp: Date.now()
-             });
-          } catch(e) {
-             console.error("Fallback push failed", e);
-             // Provide a local test array if Firebase is entirely borked
-             if (!window._mockSubmissions) window._mockSubmissions = [];
-             // generate fake ID for animation tracker
-             const fakeId = 'mock_' + Date.now();
-             window._mockSubmissions.push({ id: fakeId, name, score, tier, statusColor, glowColor, timestamp: Date.now() });
-             window._mockSubmissions.sort((a,b) => b.score - a.score);
-             renderLeaderboard(window._mockSubmissions);
-          }
-        }
-      }
-    });
-  }
-
-  // Reset Data button logic
-  const resetBtn = document.getElementById('reset-leaderboard-btn');
-  if (resetBtn) {
-    resetBtn.addEventListener('click', async () => {
-      const confirmed = confirm("Are you sure you want to completely erase ALL audience submission data? This cannot be undone.");
-      if (confirmed) {
-        // Clear mock data
-        window._mockSubmissions = [];
-        renderedIds.clear();
+    function playSubBass() {
+      if (!userInteracted) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(40, audioCtx.currentTime); 
         
-        // Clear Firebase
-        try {
-          const database = firebase.database();
-          await database.ref('presentations/audience/scores').remove();
-        } catch(e) {
-          console.warn("Could not wipe Firebase, wiping local view instead.", e);
-          renderLeaderboard([]);
-          if (liveScoreStatus) liveScoreStatus.style.display = 'block';
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+      } catch (e) {
+        // Mute playback errors
+      }
+    }
+
+    // ==========================================
+    // CONFIGURATION & CONSTANTS
+    // ==========================================
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d'); // Using transparent canvas for ambient bg
+    const noiseCanvas = document.getElementById('noise-canvas');
+    const nctx = noiseCanvas.getContext('2d');
+    const flashDiv = document.getElementById('flash');
+    const titleEl = document.getElementById('title');
+    const titleContainer = document.getElementById('title-container');
+    const underlineEl = document.getElementById('underline');
+    const subtitleEl = document.getElementById('subtitle');
+    const hintTextContainer = document.getElementById('hint-text');
+    const customCursor = document.getElementById('custom-cursor');
+    const distortionContainer = document.getElementById('distortion-container');
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    const initialDpr = window.devicePixelRatio || 1;
+    
+    // Node Sprite Canvas (Offscreen rendering for performance)
+    const spriteCanvas = document.createElement('canvas');
+    spriteCanvas.width = 60 * initialDpr;
+    spriteCanvas.height = 60 * initialDpr;
+    const sctx = spriteCanvas.getContext('2d');
+    sctx.scale(initialDpr, initialDpr);
+    sctx.shadowBlur = 12;
+    sctx.shadowColor = '#F472B6';
+    sctx.fillStyle = '#F472B6';
+    sctx.beginPath();
+    sctx.arc(30, 30, 3, 0, Math.PI * 2);
+    sctx.fill();
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+
+      // Render oversized noise for jittering
+      const nw = width * 1.5; const nh = height * 1.5;
+      noiseCanvas.width = nw;
+      noiseCanvas.height = nh;
+      const idata = nctx.createImageData(nw, nh);
+      for(let i=0; i<idata.data.length; i+=4) {
+        const val = Math.random() * 255;
+        idata.data[i] = val;
+        idata.data[i+1] = val;
+        idata.data[i+2] = val;
+        idata.data[i+3] = 255;
+      }
+      nctx.putImageData(idata, 0, 0);
+    }
+    window.addEventListener('resize', resize);
+    resize(); // Initial run
+
+    // Cursor tracking
+    window.addEventListener('mousemove', (e) => {
+      customCursor.style.left = e.clientX + 'px';
+      customCursor.style.top = e.clientY + 'px';
+    });
+
+    const COLORS = { line: 'rgba(192, 132, 252, 0.25)', halo: 'rgba(244,114,182,0.15)' };
+
+    // ==========================================
+    // STATE FLAGS
+    // ==========================================
+    const state = {
+      stage1PulseFired: false,
+      stage1Done: false,
+      stage3Done: false,
+      stage4Done: false,
+      stage5Start: false,
+      stage5bSnap: false,
+      stage6Done: false,
+      stage7Start: false,
+      stage7Done: false,
+      stage8Start: false,
+      redirecting: false
+    };
+
+    let startTime = null;
+    let globalNetworkOpacity = 1.0;
+    
+    // ==========================================
+    // CLASS STRUCTURE
+    // ==========================================
+    class Node {
+      constructor(x, y) {
+        this.baseX = x;
+        this.baseY = y;
+        this.x = x;
+        this.y = y;
+        this.depth = 0.6 + Math.random() * 0.4;
+        this.restRadius = 3 * this.depth;
+        this.radius = this.restRadius; 
+        this.haloRadius = 9 * this.depth; 
+        this.opacity = 1;
+        this.edges = [];
+        this.pulseState = 0; 
+        this.pulseMaxRadius = 12 * this.depth;
+        this.pulseSpeed = 0;
+        this.spawned = true; 
+        this.nodeAngle = Math.random() * Math.PI * 2;
+      }
+
+      triggerPulse(maxR, speedMultiplier) {
+        this.pulseState = 1;
+        this.pulseMaxRadius = maxR * this.depth;
+        this.pulseSpeed = speedMultiplier;
+      }
+
+      update(dt, elapsed) {
+        // Breathing
+        const breathOffset = Math.sin(elapsed * 0.3) * 8;
+        this.x = this.baseX + Math.cos(this.nodeAngle) * breathOffset;
+        this.y = this.baseY + Math.sin(this.nodeAngle) * breathOffset;
+
+        if (this.pulseState === 1) {
+          this.radius += 100 * dt * this.pulseSpeed; 
+          if (this.radius >= this.pulseMaxRadius) {
+            this.radius = this.pulseMaxRadius;
+            this.pulseState = 2;
+          }
+        } else if (this.pulseState === 2) {
+          this.radius -= 60 * dt * this.pulseSpeed;
+          if (this.radius <= this.restRadius) {
+            this.radius = this.restRadius;
+            this.pulseState = 0;
+          }
+        } else {
+          this.radius = this.restRadius;
+        }
+        this.haloRadius = this.radius * 3;
+      }
+
+      draw(ctx, networkOpacity) {
+        ctx.save();
+        ctx.globalAlpha = this.opacity * networkOpacity;
+
+        // Halo
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, Math.max(0.1, this.haloRadius), 0, Math.PI * 2);
+        ctx.fillStyle = COLORS.halo;
+        ctx.fill();
+
+        // Screen Core Draw using Sprite
+        ctx.globalCompositeOperation = 'screen';
+        const sprSize = 60 * (this.radius / 3); // Scale sprite based on visual pulse
+        ctx.drawImage(spriteCanvas, this.x - sprSize/2, this.y - sprSize/2, sprSize, sprSize);
+        
+        ctx.restore();
+      }
+    }
+
+    class Edge {
+      constructor(fromNode, toNode) {
+        this.from = fromNode;
+        this.to = toNode;
+        this.progress = 0; 
+        this.drawSpeed = 0.008 + Math.random() * 0.014;
+        this.thickness = 0.4 + Math.random() * 0.4;
+        this.opacity = Math.min(fromNode.depth, toNode.depth);
+        this.isComplete = false;
+
+        // Quadratic Curve point offset
+        const midX = (fromNode.baseX + toNode.baseX) / 2;
+        const midY = (fromNode.baseY + toNode.baseY) / 2;
+        const angle = Math.atan2(toNode.baseY - fromNode.baseY, toNode.baseX - fromNode.baseX);
+        const offsetDist = (Math.random() > 0.5 ? 1 : -1) * (20 + Math.random() * 25);
+        this.cpX = midX + Math.cos(angle + Math.PI/2) * offsetDist;
+        this.cpY = midY + Math.sin(angle + Math.PI/2) * offsetDist;
+      }
+
+      update(dt) {
+        if (this.progress < 1) {
+          const easedIncrement = this.drawSpeed * Math.sin(this.progress * Math.PI) * (dt * 60);
+          const minimum = this.drawSpeed * 0.3 * dt * 60;
+          this.progress += easedIncrement + minimum;
+          if (this.progress >= 1) {
+            this.progress = 1;
+            this.isComplete = true;
+          }
         }
       }
-    });
-  }
 
-  // Init
-  updateUI();
-})();
-</script>
+      getPointOnBezier(t) {
+        const u = 1 - t;
+        const tt = t * t;
+        const uu = u * u;
+        const cx = uu * this.from.x + 2 * u * t * this.cpX + tt * this.to.x;
+        const cy = uu * this.from.y + 2 * u * t * this.cpY + tt * this.to.y;
+        return {x: cx, y: cy};
+      }
+
+      draw(ctx, networkOpacity) {
+        if (this.progress <= 0) return;
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(this.from.x, this.from.y);
+        
+        // Compute path up to progress t
+        const steps = Math.floor(this.progress * 20); // resolution
+        for (let i = 1; i <= steps; i++) {
+            const p = this.getPointOnBezier(i / 20.0);
+            ctx.lineTo(p.x, p.y);
+        }
+        // Final exact point
+        const fp = this.getPointOnBezier(this.progress);
+        ctx.lineTo(fp.x, fp.y);
+
+        ctx.strokeStyle = COLORS.line;
+        ctx.lineWidth = this.thickness;
+        ctx.shadowBlur = 3;
+        ctx.shadowColor = '#C084FC';
+        ctx.globalAlpha = this.opacity * networkOpacity;
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = height + Math.random() * 100;
+        this.speed = 8 + Math.random() * 15; // px per sec
+        this.baseOpacity = 0.1 + Math.random() * 0.25;
+        this.opacity = this.baseOpacity;
+        this.size = 0.5 + Math.random() * 2.5; // Up to 3px radius for bokeh depth
+        this.wobble = Math.random() * Math.PI * 2;
+        this.wobbleSpeed = 0.5 + Math.random() * 1.5;
+      }
+      update(dt, elapsed) {
+        this.y -= this.speed * dt;
+        this.wobble += this.wobbleSpeed * dt;
+        this.x += Math.cos(this.wobble) * 0.3;
+        
+        // Slow pulsing optical depth
+        this.opacity = this.baseOpacity * (0.6 + 0.4 * Math.sin(elapsed * 0.5 + this.wobble));
+        
+        if (this.y < -10) { this.y = height + 10; this.x = Math.random() * width; }
+      }
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        
+        // Bokeh Radial Gradient
+        const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+        grad.addColorStop(0, 'rgba(192, 132, 252, 1)');
+        grad.addColorStop(0.4, 'rgba(192, 132, 252, 0.8)');
+        grad.addColorStop(1, 'rgba(192, 132, 252, 0)');
+        
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // ==========================================
+    // DATA STORES
+    // ==========================================
+    const nodes = [];
+    const edges = [];
+    const particles = Array.from({length: 20}, () => new Particle());
+    const targetNodes = 110;
+
+    // Text
+    const originalTitle = "Mind & Media";
+    const titleChars = originalTitle.split('');
+    const originalSubtitle = "How platforms rewire your brain — and what you can do about it.";
+    const titleSpans = [];
+
+    // Glitch vars
+    let lastGlitchCharTime = 0;
+    let lastGlitchShiftTime = 0;
+    let lastDistortionTime = 0;
+    let lockTimer = null;
+    let chromaticOffset = 0;
+    const lockedChars = new Set();
+    const COLORS_GLITCH = ['#FFFFFF', '#C084FC', '#F472B6', '#FF2222'];
+    const glitchBank = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$*%&!?[]<>\\/|~".split('');
+    
+    // Subtitle vars
+    let subtitleIndex = 0;
+    let lastTypewriterTime = 0;
+    let cursorObj = null;
+
+    let lastIdlePulseTime = 0;
+    let nextIdlePulseDelay = 2.0;
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    function setupText() {
+      titleEl.innerHTML = '';
+      titleChars.forEach((char) => {
+        const span = document.createElement('span');
+        if (char === ' ') span.innerHTML = '&nbsp;'; else span.textContent = char;
+        titleSpans.push(span);
+        titleEl.appendChild(span);
+      });
+      subtitleEl.textContent = "";
+    }
+
+    function initNetwork() {
+      let edgeX, edgeY;
+      const edgeSide = Math.floor(Math.random() * 4);
+      if (edgeSide === 0) { edgeX = Math.random() * width; edgeY = -10; } 
+      else if (edgeSide === 1) { edgeX = width + 10; edgeY = Math.random() * height; } 
+      else if (edgeSide === 2) { edgeX = Math.random() * width; edgeY = height + 10; } 
+      else { edgeX = -10; edgeY = Math.random() * height; } 
+
+      const startNode = new Node(edgeX, edgeY);
+      nodes.push(startNode);
+    }
+
+    function spawnEdges() {
+      if (nodes.length >= targetNodes) return;
+      const spawnCount = Math.floor(Math.random() * 2) + 3;
+      
+      for (let i = 0; i < spawnCount && nodes.length < targetNodes; i++) {
+        if (nodes.length === 0) continue;
+        const parent = nodes[Math.floor(Math.random() * nodes.length)];
+        
+        const baseAngle = Math.atan2((height/2) - parent.baseY, (width/2) - parent.baseX);
+        const finalAngle = baseAngle + (Math.random() * 180 - 90) * (Math.PI / 180);
+        
+        const distance = 100 + Math.random() * 120; 
+        const newX = parent.baseX + Math.cos(finalAngle) * distance;
+        const newY = parent.baseY + Math.sin(finalAngle) * distance;
+        
+        if (newX < 0 || newX > width || newY < 0 || newY > height) continue;
+        
+        let tooClose = false;
+        for (let n of nodes) {
+          if (Math.hypot(n.baseX - newX, n.baseY - newY) < 40) { tooClose = true; break; }
+        }
+        if (tooClose) continue;
+        
+        const childNode = new Node(newX, newY);
+        nodes.push(childNode);
+        const newEdge = new Edge(parent, childNode);
+        edges.push(newEdge);
+        
+        parent.edges.push(newEdge);
+        childNode.edges.push(newEdge);
+      }
+    }
+
+    // ==========================================
+    // THE MASTER LOOP
+    // ==========================================
+    let lastTime = 0;
+
+    function renderSequence(timestamp) {
+      if (!startTime) {
+        startTime = timestamp;
+        lastTime = timestamp;
+        initNetwork();
+        setupText();
+      }
+      
+      const dt = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+      const elapsed = (timestamp - startTime) / 1000;
+
+      // Clear transparency to show Ambient CSS leak background
+      ctx.clearRect(0, 0, width, height);
+
+      // Noise grain jitter (Dynamic Film Grain) - Every ~3 frames
+      if (Math.floor(timestamp / 50) % 2 === 0) {
+        const jx = -(Math.random() * 50).toFixed(1);
+        const jy = -(Math.random() * 50).toFixed(1);
+        noiseCanvas.style.transform = `translate(${jx}px, ${jy}px)`;
+      }
+
+      // --- STAGE 1: First Pulse (0 -> 0.6s) ---
+      if (elapsed > 0.05 && elapsed < 0.6) {
+        if (!state.stage1PulseFired) {
+          nodes[0].triggerPulse(12, 1.5);
+          state.stage1PulseFired = true; 
+        }
+      } 
+      if (elapsed >= 0.6 && !state.stage1Done) {
+        state.stage1Done = true;
+      }
+
+      // --- STAGE 2: Network Spreads (0.6 -> 3.2s) ---
+      if (elapsed >= 0.6 && elapsed < 3.2) {
+        let spawns = 4; 
+        while(spawns-- > 0) spawnEdges();
+      }
+
+      // Network Objects Updates
+      edges.forEach(e => {
+        const wasIncomplete = !e.isComplete;
+        e.update(dt);
+        if (wasIncomplete && e.isComplete && elapsed < 3.2) {
+          e.to.triggerPulse(12, 2.0);
+        }
+        e.draw(ctx, globalNetworkOpacity);
+      });
+
+      nodes.forEach(n => {
+        n.update(dt, elapsed);
+        n.draw(ctx, globalNetworkOpacity);
+      });
+      
+      particles.forEach(p => { p.update(dt, elapsed); p.draw(ctx); });
+
+      // --- STAGE 3: Network Sync Flash (3.2s -> 3.6s) ---
+      if (elapsed >= 3.2) {
+        if (!state.stage3Done) {
+          nodes.forEach(n => n.triggerPulse(16, 3.0));
+          state.stage3Done = true;
+          playSubBass();
+        }
+        if (elapsed < 3.6) {
+          const fadeProgress = (elapsed - 3.2) / 0.4;
+          globalNetworkOpacity = 1.0 - (fadeProgress * 0.75);
+        } else {
+          globalNetworkOpacity = 0.25;
+        }
+      }
+
+      // --- STAGE 4: Title Materializes (3.6s -> 6.4s) ---
+      if (elapsed >= 3.6 && !state.stage4Done) {
+        titleSpans.forEach((span, i) => {
+          setTimeout(() => { span.classList.add('title-arrive'); }, i * 28);
+        });
+        setTimeout(() => { underlineEl.style.width = '100%'; }, 2800); // Trigger line draw at end of transition
+        state.stage4Done = true;
+      }
+
+      // --- STAGE 5: Glitch Burst (6.4s -> 9.4s) ---
+      if (elapsed >= 6.4 && elapsed < 9.4) {
+        if (!state.stage5Start) {
+          titleEl.style.transition = 'none';
+          titleSpans.forEach(span => span.style.transition = 'none');
+          state.stage5Start = true;
+        }
+
+        // Glitch Chars (80ms)
+        if (elapsed - lastGlitchCharTime > 0.08) {
+          lastGlitchCharTime = elapsed;
+          titleSpans.forEach((span, i) => {
+            if (!lockedChars.has(i)) {
+              span.textContent = glitchBank[Math.floor(Math.random() * glitchBank.length)];
+              span.style.color = COLORS_GLITCH[Math.floor(Math.random() * COLORS_GLITCH.length)];
+            }
+          });
+        }
+
+        // Horizontal + Vertical Shift Div (150ms)
+        if (elapsed - lastGlitchShiftTime > 0.15) {
+          lastGlitchShiftTime = elapsed;
+          const shiftX = (Math.random() * 14 - 7).toFixed(1);
+          const shiftY = (Math.random() * 4 - 2).toFixed(1);
+          titleEl.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
+        }
+
+        // Distortion Bars (200ms)
+        if (elapsed - lastDistortionTime > 0.20) {
+          lastDistortionTime = elapsed;
+          const barCount = Math.floor(Math.random() * 2) + 2; 
+          for (let i=0; i<barCount; i++) {
+            if (!distortionContainer) break;
+            const bar = document.createElement('div');
+            bar.className = 'distortion-bar';
+            bar.style.top = (Math.random() * 100) + 'vh';
+            bar.style.height = (Math.random() * 2 + 3) + 'px';
+            distortionContainer.appendChild(bar);
+            setTimeout(() => { if (bar.parentNode) bar.parentNode.removeChild(bar); }, 180);
+          }
+        }
+
+        // Sub-stage 5a: Partial Lock-In (8.5s -> 9.4s)
+        if (elapsed >= 8.5) {
+          if (!state.stage5aStart) {
+            let lockOrder = titleChars.map((_, i) => i);
+            lockOrder.sort((a,b) => (a + Math.random()*3) - (b + Math.random()*3));
+            
+            let lockIndex = 0;
+            if (lockTimer) clearInterval(lockTimer);
+            lockTimer = setInterval(() => {
+              if (lockIndex < lockOrder.length - 2 && elapsed < 9.4) {
+                const idx = lockOrder[lockIndex];
+                lockedChars.add(idx);
+                titleSpans[idx].textContent = titleChars[idx];
+                if (titleChars[idx] === ' ') titleSpans[idx].innerHTML = '&nbsp;';
+                titleSpans[idx].style.color = ''; 
+                lockIndex++;
+              } else {
+                clearInterval(lockTimer);
+              }
+            }, 60);
+            
+            state.stage5aStart = true;
+          }
+        }
+      }
+
+      // --- Sub-stage 5b: The Snap (9.4s) ---
+      if (elapsed >= 9.4 && !state.stage5bSnap) {
+        if (lockTimer) clearInterval(lockTimer);
+        
+        // Restore actual title cleanly
+        titleEl.style.opacity = '1';
+        
+        for (let i = 0; i < titleSpans.length; i++) {
+           titleSpans[i].textContent = originalTitle[i];
+           if (originalTitle[i] === ' ') titleSpans[i].innerHTML = '&nbsp;';
+           titleSpans[i].style.color = '';
+           titleSpans[i].style.transform = 'none';
+        }
+        lockedChars.clear();
+        
+        titleEl.style.transform = `translate(0px, 0px)`;
+        if(distortionContainer) distortionContainer.innerHTML = '';
+        
+        flashDiv.style.opacity = '0.85';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            flashDiv.style.transition = 'opacity 280ms ease-out';
+            flashDiv.style.opacity = '0';
+          });
+        });
+
+        chromaticOffset = 6.0; // Resetting to original ±6px per the previous glitch effect
+        state.stage5bSnap = true;
+      }
+
+      // --- STAGE 6: Chromatic Lerp (9.4s -> 10.6s) ---
+      if (elapsed >= 9.4 && !state.stage6Done) {
+        if (chromaticOffset > 0.05) {
+          const chromaProgress = (elapsed - 9.4) / 1.2;
+          const easeOut = 1 - Math.pow(1 - chromaProgress, 3);
+          chromaticOffset = 2 * (1 - easeOut);
+          if (chromaticOffset < 0.05) chromaticOffset = 0; 
+          titleEl.style.textShadow = `${chromaticOffset}px 0 red, -${chromaticOffset}px 0 rgba(0,255,255,0.5)`;
+        } else {
+          titleEl.style.textShadow = 'none';
+          state.stage6Done = true;
+        }
+      }
+
+      // --- STAGE 7: Typewriter (10.6s -> 11.8s+) ---
+      if (elapsed >= 10.6 && !state.stage7Done) {
+        if (!state.stage7Start) {
+          subtitleEl.style.opacity = '1';
+          lastTypewriterTime = elapsed;
+          cursorObj = document.createElement('span');
+          cursorObj.id = 'cursor';
+          cursorObj.textContent = '|';
+          subtitleEl.appendChild(cursorObj);
+          state.stage7Start = true;
+        }
+
+        if (subtitleIndex <= originalSubtitle.length) {
+          if (elapsed - lastTypewriterTime > 0.038) {
+            lastTypewriterTime = elapsed;
+            subtitleEl.innerHTML = originalSubtitle.substring(0, subtitleIndex);
+            subtitleEl.appendChild(cursorObj);
+            subtitleIndex++;
+            
+            if (subtitleIndex > originalSubtitle.length) {
+              setTimeout(() => {
+                if (cursorObj) {
+                  cursorObj.style.transition = 'opacity 300ms';
+                  cursorObj.style.opacity = '0';
+                  setTimeout(() => { if (cursorObj.parentNode) cursorObj.parentNode.removeChild(cursorObj); }, 300);
+                }
+              }, 1500); 
+              state.stage7Done = true;
+            }
+          }
+        }
+      }
+
+      // --- STAGE 8: Idle (11.8s -> ∞) ---
+      if (state.stage7Done && elapsed > 11.8) {
+        if (!state.stage8Start) {
+          setTimeout(() => { 
+            hintTextContainer.style.opacity = '1'; 
+            customCursor.style.opacity = '1';
+          }, 1000);
+
+          function commenceRedirect() {
+             if (state.redirecting) return;
+             state.redirecting = true;
+             document.body.style.transition = 'opacity 800ms ease';
+             document.body.style.opacity = '0';
+             setTimeout(() => { window.location.href = 'presentation.html'; }, 800);
+          }
+
+          let debounceValid = false;
+          setTimeout(() => { debounceValid = true; }, 500); 
+          
+          window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') commenceRedirect();
+          });
+          window.addEventListener('click', () => { if (debounceValid) commenceRedirect(); });
+          
+          // Auto-advance after 4.5 seconds of idle
+          setTimeout(commenceRedirect, 4500);
+
+          state.stage8Start = true;
+        }
+
+        if (elapsed - lastIdlePulseTime > nextIdlePulseDelay) {
+          lastIdlePulseTime = elapsed;
+          nextIdlePulseDelay = 1.8 + Math.random() * 0.7; 
+          
+          const count = Math.floor(Math.random() * 2) + 2;
+          for (let i=0; i<count; i++) {
+            const rNode = nodes[Math.floor(Math.random() * nodes.length)];
+            rNode.triggerPulse(8, 0.8);
+          }
+
+          if (Math.random() > 0.5) {
+             const completedEdges = edges.filter(e => e.isComplete);
+             if (completedEdges.length > 0) {
+               const rEdge = completedEdges[Math.floor(Math.random() * completedEdges.length)];
+               rEdge.progress = 0; 
+               rEdge.isComplete = false;
+             }
+          }
+        }
+      }
+
+      if(!state.redirecting) requestAnimationFrame(renderSequence);
+    }
+
+    requestAnimationFrame(renderSequence);
+
+  </script>
 </body>
 </html>
