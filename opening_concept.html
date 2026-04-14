@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mind & Media Opening Concept</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #050508;
+      overflow: hidden;
+      font-family: 'Sora', sans-serif;
+    }
+
+    /* Layer 1: Canvas */
+    #bg-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /* Layer 3: Text Layer */
+    #text-layer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    #title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 7vw;
+      color: #F5F5F5;
+      letter-spacing: 2px;
+      margin: 0;
+      line-height: 1;
+      opacity: 0;
+      white-space: nowrap;
+      text-transform: uppercase;
+      /* CSS transition for materialization phase ONLY, disabled later by JS */
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                  filter 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                  text-shadow 0.6s ease-out;
+      filter: blur(10px);
+      transform: scale(1.06);
+    }
+
+    /* Specific title character spans */
+    #title span {
+      display: inline-block;
+    }
+
+    .title-show {
+      opacity: 1 !important;
+      filter: blur(0px) !important;
+      transform: scale(1) !important;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+    }
+
+    .title-settle {
+      text-shadow: none !important;
+    }
+
+    #subtitle {
+      font-family: 'Sora', sans-serif;
+      font-weight: 300;
+      font-size: 1.4vw;
+      color: #C084FC;
+      margin-top: 1.5vh;
+      opacity: 0;
+      /* Subtitle transition */
+      transition: opacity 0.5s ease;
+      text-align: center;
+      max-width: 80%;
+      white-space: nowrap;
+    }
+
+    .subtitle-show {
+      opacity: 1 !important;
+    }
+
+    /* Typewriter cursor blink */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 500ms infinite;
+    }
+
+    /* Layer 4: Flash Overlay */
+    #flash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff;
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* Distortion bars layer */
+    #distortion-container {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 9;
+      pointer-events: none;
+    }
+    
+    .distortion-bar {
+      position: absolute;
+      left: 0;
+      width: 100vw;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <div id="distortion-container"></div>
+  
+  <div id="text-layer">
+    <h1 id="title">Mind & Media</h1>
+    <h2 id="subtitle"></h2>
+  </div>
+
+  <div id="flash"></div>
+
+  <script>
+    // ==========================================
+    // CONFIGURATION & CONSTANTS
+    // ==========================================
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d', { alpha: false }); // Optimization
+    const flashDiv = document.getElementById('flash');
+    const titleEl = document.getElementById('title');
+    const subtitleEl = document.getElementById('subtitle');
+    const distortionContainer = document.getElementById('distortion-container');
+
+    let width, height;
+    
+    // Resize handling
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        width = entry.contentRect.width;
+        height = entry.contentRect.height;
+        // Handle high DPI displays for crisp canvas
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+      }
+    });
+    resizeObserver.observe(document.body);
+
+    const COLORS = {
+      bg: '#050508',
+      line: '#C084FC',
+      pulse: '#F472B6',
+      glitch: ['#FFFFFF', '#C084FC', '#F472B6', '#FF2222']
+    };
+
+    // ==========================================
+    // CLASSES
+    // ==========================================
+    class Node {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = 0;
+        this.opacity = 1;
+        this.edges = [];
+        this.pulseState = 0; // 0 = idle, 1 = growing, 2 = shrinking
+        this.pulseMaxRadius = 12;
+        this.restRadius = 2;
+        this.pulseSpeed = 0;
+      }
+
+      triggerPulse(maxR = 12, speedMultiplier = 1) {
+        this.pulseState = 1;
+        this.pulseMaxRadius = maxR;
+        this.pulseSpeed = speedMultiplier;
+      }
+
+      update(dt) {
+        if (this.pulseState === 1) {
+          this.radius += 100 * dt * this.pulseSpeed; 
+          if (this.radius >= this.pulseMaxRadius) {
+            this.radius = this.pulseMaxRadius;
+            this.pulseState = 2;
+          }
+        } else if (this.pulseState === 2) {
+          this.radius -= 60 * dt * this.pulseSpeed;
+          if (this.radius <= this.restRadius) {
+            this.radius = this.restRadius;
+            this.pulseState = 0;
+          }
+        } else {
+          this.radius = this.restRadius;
+        }
+      }
+
+      draw(ctx, networkOpacity) {
+        if (this.radius <= 0) return;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, Math.max(0.1, this.radius), 0, Math.PI * 2);
+        ctx.fillStyle = COLORS.pulse;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = COLORS.pulse;
+        ctx.globalAlpha = this.opacity * networkOpacity;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    class Edge {
+      constructor(fromNode, toNode, targetLength) {
+        this.from = fromNode;
+        this.to = toNode;
+        this.progress = 0; 
+        this.drawSpeed = 0.008 + Math.random() * 0.014; // 0.008 to 0.022 progress per frame roughly
+        this.opacity = 0.7; // specified 70% opacity
+        this.isComplete = false;
+        
+        // Calculate physics for partial drawing
+        this.targetLength = targetLength;
+      }
+
+      update(dt) {
+        if (this.progress < 1) {
+          // Normalizing dt (assume 60fps native dt is ~0.016)
+          this.progress += this.drawSpeed * (dt * 60);
+          if (this.progress >= 1) {
+            this.progress = 1;
+            this.isComplete = true;
+          }
+        }
+      }
+
+      draw(ctx, networkOpacity) {
+        if (this.progress <= 0) return;
+        const currentX = this.from.x + (this.to.x - this.from.x) * this.progress;
+        const currentY = this.from.y + (this.to.y - this.from.y) * this.progress;
+
+        ctx.beginPath();
+        ctx.moveTo(this.from.x, this.from.y);
+        ctx.lineTo(currentX, currentY);
+        ctx.strokeStyle = COLORS.line;
+        ctx.lineWidth = 1.5;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = COLORS.line;
+        ctx.globalAlpha = this.opacity * networkOpacity;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    // ==========================================
+    // STATE & ALGORITHM
+    // ==========================================
+    const nodes = [];
+    const edges = [];
+    const targetNodes = 55;
+    
+    // Master timeline references
+    let startTime = null;
+    let globalNetworkOpacity = 1.0;
+    
+    // Sub-systems state tracking
+    const state = {
+      stage1Done: false,
+      stage3Done: false,
+      stage4Done: false,
+      stage4BloomDone: false,
+      stage5Start: false,
+      stage5aStart: false,
+      stage5bSnap: false,
+      stage7Start: false,
+      stage8Start: false
+    };
+
+    // Text & Glitch state
+    const originalTitle = "Mind & Media";
+    const originalSubtitle = "How platforms rewire your brain — and what you can do about it.";
+    const titleChars = originalTitle.split('');
+    const glitchBank = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$*%&!?[]<>\\/|~".split('');
+    let titleSpans = [];
+    let lockedChars = new Set();
+    
+    let lastGlitchCharTime = 0;
+    let lastGlitchShiftTime = 0;
+    let lastDistortionTime = 0;
+    let chromaticOffset = 0;
+    
+    let subtitleIndex = 0;
+    let lastTypewriterTime = 0;
+    let cursorBlinks = 0;
+
+    // Idle state
+    let lastIdlePulseTime = 0;
+    let nextIdlePulseDelay = 2.0;
+
+    function initNetwork() {
+      // Pick random edge point
+      let edgeX, edgeY;
+      const edge = Math.floor(Math.random() * 4);
+      if (edge === 0) { edgeX = Math.random() * width; edgeY = 0; } // Top
+      else if (edge === 1) { edgeX = width; edgeY = Math.random() * height; } // Right
+      else if (edge === 2) { edgeX = Math.random() * width; edgeY = height; } // Bottom
+      else { edgeX = 0; edgeY = Math.random() * height; } // Left
+
+      const startNode = new Node(edgeX, edgeY);
+      nodes.push(startNode);
+    }
+
+    function spawnEdges() {
+      if (nodes.length >= targetNodes) return;
+      
+      // Batch spawn 3-4 edges
+      const spawnCount = Math.floor(Math.random() * 2) + 3;
+      
+      for (let i = 0; i < spawnCount && nodes.length < targetNodes; i++) {
+        // Pick random existing node that's already reached (pulseState=0 implies it was created/completed)
+        const candidates = nodes.filter(n => n.radius > 0);
+        if (candidates.length === 0) continue;
+        
+        const parent = candidates[Math.floor(Math.random() * candidates.length)];
+        
+        // Random angle, random distance 80-160
+        const angleOffset = (Math.random() * 140 - 70) * (Math.PI / 180);
+        // Direct it generally inwards or randomly if in middle
+        const baseAngle = Math.atan2(height/2 - parent.y, width/2 - parent.x);
+        const finalAngle = baseAngle + angleOffset;
+        
+        const distance = 80 + Math.random() * 80;
+        const newX = parent.x + Math.cos(finalAngle) * distance;
+        const newY = parent.y + Math.sin(finalAngle) * distance;
+        
+        // Bounds check
+        if (newX < 0 || newX > width || newY < 0 || newY > height) continue;
+        
+        // Collision check (40px)
+        let tooClose = false;
+        for (let n of nodes) {
+          const dist = Math.hypot(n.x - newX, n.y - newY);
+          if (dist < 40) { tooClose = true; break; }
+        }
+        if (tooClose) continue;
+        
+        const childNode = new Node(newX, newY);
+        nodes.push(childNode);
+        const newEdge = new Edge(parent, childNode, distance);
+        edges.push(newEdge);
+        
+        parent.edges.push(newEdge);
+        childNode.edges.push(newEdge);
+      }
+    }
+
+    function setupText() {
+      titleEl.innerHTML = '';
+      titleChars.forEach((char, i) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        if (char === ' ') span.innerHTML = '&nbsp;';
+        titleSpans.push(span);
+        titleEl.appendChild(span);
+      });
+      subtitleEl.textContent = "";
+    }
+
+    // ==========================================
+    // MAIN LOOP
+    // ==========================================
+    let lastTime = 0;
+
+    function renderSequence(timestamp) {
+      if (!startTime) {
+        startTime = timestamp;
+        lastTime = timestamp;
+        initNetwork();
+        setupText();
+      }
+      
+      const dt = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+      const elapsed = (timestamp - startTime) / 1000;
+
+      // 1. CLEAR & DRAW BG
+      ctx.fillStyle = COLORS.bg;
+      ctx.fillRect(0, 0, width, height);
+
+      // --- STAGE 1: First Pulse (0 -> 0.5s) ---
+      if (elapsed < 0.5 && !state.stage1Done) {
+        if (elapsed > 0.05 && nodes[0].pulseState === 0) {
+          nodes[0].triggerPulse(12, 1.5); // Fast heartbeat
+        }
+      } 
+      if (elapsed >= 0.5 && !state.stage1Done) {
+        state.stage1Done = true;
+      }
+
+      // --- STAGE 2: Network Spreads (0.5 -> 2.8s) ---
+      if (elapsed >= 0.5 && elapsed < 2.8) {
+        // Cap node spawning to avoid jank via batch logic inside spawnEdges
+        spawnEdges();
+      }
+
+      // Network Updates
+      edges.forEach(e => {
+        const wasIncomplete = !e.isComplete;
+        e.update(dt);
+        if (wasIncomplete && e.isComplete && elapsed < 2.8) {
+          // Node arrives! Trigger pulse
+          e.to.triggerPulse(12, 2.0);
+        }
+        e.draw(ctx, globalNetworkOpacity);
+      });
+
+      nodes.forEach(n => {
+        n.update(dt);
+        n.draw(ctx, globalNetworkOpacity);
+      });
+
+      // --- STAGE 3: Network Sync Flash (2.8s -> 3.2s) ---
+      if (elapsed >= 2.8 && !state.stage3Done) {
+        // Trigger all nodes to flash at 2.8s exactly
+        nodes.forEach(n => n.triggerPulse(14, 3.0));
+        state.stage3Done = true;
+      }
+      if (elapsed > 2.8 && elapsed < 3.2) {
+        // Fade global opacity to 35%
+        const fadeProgress = (elapsed - 2.8) / 0.4;
+        globalNetworkOpacity = 1.0 - (fadeProgress * 0.65);
+      } else if (elapsed >= 3.2) {
+        globalNetworkOpacity = 0.35;
+      }
+
+      // --- STAGE 4: Title Materializes (3.2s -> 4.2s) ---
+      if (elapsed >= 3.2 && !state.stage4Done) {
+        titleEl.classList.add('title-show');
+        state.stage4Done = true;
+      }
+      if (elapsed >= 3.8 && !state.stage4BloomDone) {
+        // Remove text-shadow bloom
+        titleEl.classList.add('title-settle');
+        state.stage4BloomDone = true;
+      }
+
+      // --- STAGE 5: Glitch Burst (4.2s -> 6.2s) ---
+      // Actually spans sub-stages. Ends completely at 5.9 Snap.
+      if (elapsed >= 4.2 && elapsed < 5.9) {
+        if (!state.stage5Start) {
+          // Disable CSS transitions on title so JS can take over transforms cleanly
+          titleEl.style.transition = 'none';
+          state.stage5Start = true;
+        }
+
+        // Glitch Chars (80ms)
+        if (elapsed - lastGlitchCharTime > 0.08) {
+          lastGlitchCharTime = elapsed;
+          titleSpans.forEach((span, i) => {
+            if (!lockedChars.has(i)) {
+              span.textContent = glitchBank[Math.floor(Math.random() * glitchBank.length)];
+              span.style.color = COLORS.glitch[Math.floor(Math.random() * COLORS.glitch.length)];
+            }
+          });
+        }
+
+        // Shift Div (150ms)
+        if (elapsed - lastGlitchShiftTime > 0.15) {
+          lastGlitchShiftTime = elapsed;
+          const shiftX = (Math.random() * 14 - 7).toFixed(1);
+          const shiftY = (Math.random() * 4 - 2).toFixed(1);
+          titleEl.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
+        }
+
+        // Distortion Bars (200ms)
+        if (elapsed - lastDistortionTime > 0.20) {
+          lastDistortionTime = elapsed;
+          const barCount = Math.floor(Math.random() * 2) + 2; // 2-3 bars
+          for (let i=0; i<barCount; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'distortion-bar';
+            bar.style.top = Math.random() * 100 + 'vh';
+            bar.style.height = (Math.random() * 2 + 3) + 'px';
+            distortionContainer.appendChild(bar);
+            // Destroy after 180ms
+            setTimeout(() => { if (bar.parentNode) bar.parentNode.removeChild(bar); }, 180);
+          }
+        }
+
+        // Sub-stage 5a: Partial Lock-In (5.4s -> 5.9s)
+        if (elapsed >= 5.4) {
+          if (!state.stage5aStart) {
+            // Pick a locking order (mostly left to right, slight randomness)
+            let lockArray = titleChars.map((_, i) => i);
+            lockArray.sort((a,b) => (a + Math.random()*3) - (b + Math.random()*3));
+            
+            // Clear individual intervals "one by one with 60ms staggered delay"
+            let lockIndex = 0;
+            const lockInterval = setInterval(() => {
+              if (lockIndex < lockArray.length - 2 && elapsed < 5.9) {
+                const targetIdx = lockArray[lockIndex];
+                lockedChars.add(targetIdx);
+                titleSpans[targetIdx].textContent = titleChars[targetIdx];
+                if (titleChars[targetIdx] === ' ') titleSpans[targetIdx].innerHTML = '&nbsp;';
+                titleSpans[targetIdx].style.color = ''; // reset to default CSS color
+                lockIndex++;
+              } else {
+                clearInterval(lockInterval);
+              }
+            }, 60);
+            
+            state.stage5aStart = true;
+          }
+        }
+      }
+
+      // --- Sub-stage 5b: The Snap (5.9s) ---
+      if (elapsed >= 5.9 && !state.stage5bSnap) {
+        // Restore all text
+        titleSpans.forEach((span, i) => {
+          span.textContent = titleChars[i];
+          if (titleChars[i] === ' ') span.innerHTML = '&nbsp;';
+          span.style.color = '';
+        });
+        titleEl.style.transform = `translate(0px, 0px)`;
+        
+        // Trigger Flash Div
+        // "opacity 0 -> 0.85 in 16ms, then fade 0 over 280ms"
+        flashDiv.style.transition = 'none';
+        flashDiv.style.opacity = '0.85';
+        
+        // Use timeout to allow DOM to register the 0.85 opacity block
+        setTimeout(() => {
+          flashDiv.style.transition = 'opacity 280ms ease-out';
+          flashDiv.style.opacity = '0';
+        }, 16);
+
+        // Initiate Chromatic Offset
+        chromaticOffset = 6;
+
+        // Cleanup any remnant distortion
+        distortionContainer.innerHTML = '';
+        
+        state.stage5bSnap = true;
+      }
+
+      // --- STAGE 6: Chromatic Aberration Fade (5.9s -> 7.4s) ---
+      if (elapsed >= 5.9 && elapsed <= 7.4) {
+        // Lerp chromatic offset from 6 to 0 over 1.5s
+        const chromaProgress = (elapsed - 5.9) / 1.5;
+        // Cubic ease out for chroma
+        const easeOut = 1 - Math.pow(1 - chromaProgress, 3);
+        chromaticOffset = 6 * (1 - easeOut);
+        
+        if (chromaticOffset < 0.1) chromaticOffset = 0;
+        
+        if (chromaticOffset > 0) {
+          titleEl.style.textShadow = `-${chromaticOffset}px 0 rgba(255,30,30,0.65), ${chromaticOffset}px 0 rgba(30,100,255,0.65)`;
+        } else {
+          titleEl.style.textShadow = 'none';
+        }
+      }
+
+      // --- STAGE 7: Subtitle Typewriter (7.4s -> 8.5s) ---
+      if (elapsed >= 7.4 && !state.stage8Start) {
+        if (!state.stage7Start) {
+          subtitleEl.style.opacity = '1';
+          subtitleEl.classList.add('subtitle-show');
+          lastTypewriterTime = elapsed;
+          state.stage7Start = true;
+        }
+
+        // 38ms per character
+        if (subtitleIndex <= originalSubtitle.length) {
+          if (elapsed - lastTypewriterTime > 0.038) {
+            lastTypewriterTime = elapsed;
+            subtitleEl.textContent = originalSubtitle.substring(0, subtitleIndex);
+            
+            // Add cursor
+            const cursor = document.createElement('span');
+            cursor.textContent = '|';
+            if (subtitleIndex === originalSubtitle.length) {
+              cursor.className = 'cursor-blink';
+              // After typing completes, blink 3 times then remove
+              setTimeout(() => {
+                if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+              }, 1500); // 3 blinks at 500ms
+              state.stage8Start = true; // Mark done
+            }
+            subtitleEl.appendChild(cursor);
+            
+            subtitleIndex++;
+          }
+        }
+      }
+
+      // --- STAGE 8: Idle State & Transition (8.5s -> 11s) ---
+      if (elapsed >= 8.5) {
+        if (!state.stage8Wait) {
+          state.stage8Wait = true;
+          // Add instruction to click/press to enter just in case they want to go early
+          const enterTip = document.createElement('div');
+          enterTip.textContent = "Press → to begin";
+          enterTip.style.cssText = "position:absolute; bottom:40px; font-size:12px; color:rgba(255,255,255,0.3); opacity:0; transition:opacity 2s; z-index:99; left:50%; transform:translateX(-50%); letter-spacing: 2px; font-family:'Sora',sans-serif;";
+          document.body.appendChild(enterTip);
+          setTimeout(() => enterTip.style.opacity = '1', 1000);
+          
+          function goNext() {
+             if(state.redirecting) return;
+             state.redirecting = true;
+             enterTip.style.opacity = '0';
+             document.body.style.transition = 'opacity 1s ease';
+             document.body.style.opacity = '0';
+             setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+          }
+          
+          window.addEventListener('keydown', (e) => {
+             if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') goNext();
+          });
+          window.addEventListener('click', goNext);
+
+          // Auto-advance after 5 seconds of idle (total time = ~13.5s)
+          setTimeout(goNext, 5000);
+        }
+
+        if (elapsed - lastIdlePulseTime > nextIdlePulseDelay) {
+          lastIdlePulseTime = elapsed;
+          nextIdlePulseDelay = 1.8 + Math.random() * 0.7; // 1.8 - 2.5s
+          
+          // Select 2-3 random nodes
+          const count = Math.floor(Math.random() * 2) + 2;
+          for (let i=0; i<count; i++) {
+            const rNode = nodes[Math.floor(Math.random() * nodes.length)];
+            rNode.triggerPulse(8, 0.8);
+          }
+
+          // Random edge retrace
+          if (Math.random() > 0.5) {
+             const rEdge = edges[Math.floor(Math.random() * edges.length)];
+             if (rEdge && rEdge.isComplete) {
+               rEdge.progress = 0; 
+               rEdge.isComplete = false;
+               rEdge.opacity = 0.3; 
+             }
+          }
+        }
+      }
+
+      if(!state.redirecting) requestAnimationFrame(renderSequence);
+    }
+
+    // Start everything
+    requestAnimationFrame(renderSequence);
+
+  </script>
+</body>
+</html>

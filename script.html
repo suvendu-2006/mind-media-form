@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind & Media — Presenter Script</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #ffffff;
+    color: #1a1a2e;
+    line-height: 1.8;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ========== HEADER ========== */
+  .doc-header {
+    text-align: center;
+    padding: 60px 40px 40px;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 0;
+  }
+  .doc-header .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #147CE5, #0056b3);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .doc-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: #0d1117;
+    margin-bottom: 8px;
+  }
+  .doc-header .subtitle {
+    font-size: 16px;
+    color: #666;
+    font-weight: 400;
+  }
+  .doc-header .authors {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #999;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ========== CONTAINER ========== */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* ========== SLIDE SECTION ========== */
+  .slide-section {
+    padding: 48px 0 40px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .slide-section:last-child {
+    border-bottom: none;
+  }
+
+  /* ========== SLIDE HEADER ========== */
+  .slide-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .slide-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .slide-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #0d1117;
+  }
+  .slide-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 6px;
+    margin-left: auto;
+  }
+
+  /* ========== SLIDE COLORS ========== */
+  .slide-1 .slide-number { background: linear-gradient(135deg, #147CE5, #0056b3); }
+  .slide-2 .slide-number { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+  .slide-3 .slide-number { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+  .slide-4 .slide-number { background: linear-gradient(135deg, #ec4899, #db2777); }
+  .slide-5 .slide-number { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .slide-6 .slide-number { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .slide-7 .slide-number { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+  .slide-8 .slide-number { background: linear-gradient(135deg, #10b981, #059669); }
+  .slide-9 .slide-number { background: linear-gradient(135deg, #f97316, #ea580c); }
+  .slide-10 .slide-number { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+  .slide-11 .slide-number { background: linear-gradient(135deg, #6366f1, #4338ca); }
+  .slide-12 .slide-number { background: linear-gradient(135deg, #dc2626, #991b1b); }
+  .slide-13 .slide-number { background: linear-gradient(135deg, #10b981, #047857); }
+  .slide-14 .slide-number { background: linear-gradient(135deg, #f59e0b, #b45309); }
+  .slide-15 .slide-number { background: linear-gradient(135deg, #147CE5, #0056b3); }
+
+  /* ========== SCRIPT BLOCK ========== */
+  .script-block {
+    background: #fafbfc;
+    border: 1px solid #e8ecf0;
+    border-radius: 12px;
+    padding: 28px 28px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .script-block::before {
+    content: '🎤';
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: #fff;
+    padding: 0 6px;
+    font-size: 16px;
+  }
+  .script-block p {
+    margin-bottom: 14px;
+    color: #2d3748;
+    font-size: 15px;
+    line-height: 1.85;
+  }
+  .script-block p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ========== HIGHLIGHTS ========== */
+  .hl-blue {
+    background: linear-gradient(120deg, #dbeafe 0%, #dbeafe 100%);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #1e40af;
+  }
+  .hl-purple {
+    background: linear-gradient(120deg, #ede9fe 0%, #ede9fe 100%);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #6d28d9;
+  }
+  .hl-red {
+    background: linear-gradient(120deg, #fee2e2 0%, #fee2e2 100%);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #dc2626;
+  }
+  .hl-green {
+    background: linear-gradient(120deg, #d1fae5 0%, #d1fae5 100%);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #047857;
+  }
+  .hl-orange {
+    background: linear-gradient(120deg, #ffedd5 0%, #ffedd5 100%);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #c2410c;
+  }
+  .hl-cyan {
+    background: linear-gradient(120deg, #cffafe 0%, #cffafe 100%);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #0e7490;
+  }
+  .hl-pink {
+    background: linear-gradient(120deg, #fce7f3 0%, #fce7f3 100%);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #be185d;
+  }
+
+  /* Bold emphasis */
+  .script-block strong {
+    font-weight: 800;
+    color: #0d1117;
+  }
+
+  /* ========== STAGE DIRECTION ========== */
+  .stage {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: #0d9488;
+    font-style: italic;
+    background: #ccfbf1;
+    border: 1px solid #99f6e4;
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin: 4px 0;
+  }
+
+  /* ========== TIP BOX ========== */
+  .tip-box {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 4px solid #f59e0b;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #92400e;
+    line-height: 1.6;
+  }
+  .tip-box strong {
+    color: #78350f;
+  }
+  .tip-box::before {
+    content: '💡 ';
+  }
+
+  /* ========== TRANSITION ========== */
+  .transition {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #147CE5;
+    font-weight: 600;
+  }
+  .transition::before {
+    content: '→';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: #dbeafe;
+    border-radius: 50%;
+    font-size: 11px;
+    color: #1e40af;
+    flex-shrink: 0;
+  }
+
+  /* ========== GUIDE SECTION ========== */
+  .guide-section {
+    padding: 40px 0 36px;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .guide-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #0d1117;
+    margin-bottom: 6px;
+  }
+  .guide-section .guide-subtitle {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 28px;
+  }
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .guide-card {
+    background: #fafbfc;
+    border: 1px solid #e8ecf0;
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid #147CE5;
+  }
+  .guide-card.voice { border-left-color: #8b5cf6; }
+  .guide-card.body { border-left-color: #f97316; }
+  .guide-card.humor { border-left-color: #ec4899; }
+  .guide-card.pacing { border-left-color: #10b981; }
+  .guide-card.energy { border-left-color: #ef4444; }
+  .guide-card.mistakes { border-left-color: #6366f1; }
+  .guide-card h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0d1117;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .guide-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .guide-card li {
+    font-size: 13px;
+    color: #4a5568;
+    line-height: 1.7;
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 4px;
+  }
+  .guide-card li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #9ca3af;
+    font-size: 11px;
+  }
+
+  /* ========== VOICE NOTE (inline) ========== */
+  .voice-note {
+    background: #f0f0ff;
+    border: 1px solid #ddd6fe;
+    border-left: 3px solid #8b5cf6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #5b21b6;
+    line-height: 1.6;
+  }
+  .voice-note::before {
+    content: '🗣️ Voice: ';
+    font-weight: 700;
+  }
+
+  .body-note {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-left: 3px solid #f97316;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #9a3412;
+    line-height: 1.6;
+  }
+  .body-note::before {
+    content: '🧍 Body: ';
+    font-weight: 700;
+  }
+
+  .energy-note {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 3px solid #ef4444;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #991b1b;
+    line-height: 1.6;
+  }
+  .energy-note::before {
+    content: '⚡ Energy: ';
+    font-weight: 700;
+  }
+
+  /* ========== PRINT ========== */
+  @media print {
+    body { font-size: 13px; }
+    .slide-section { page-break-inside: avoid; }
+    .doc-header { padding: 30px 20px 20px; }
+    .container { padding: 0 20px 40px; }
+    .guide-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<div class="doc-header">
+  <div class="badge">Presenter Script — April 2026</div>
+  <h1>Mind & Media</h1>
+  <div class="subtitle">Understanding How Social Media Shapes Human Psychology</div>
+  <div class="authors">Suvendu & Ritesh — Trident Academy of Technology</div>
+</div>
+
+<div class="container">
+
+  <!-- ==================== SPEAKING STYLE GUIDE ==================== -->
+  <div class="guide-section">
+    <h2>🎓 Speaking Style Masterclass</h2>
+    <p class="guide-subtitle">Read this section once before practicing. These rules will make you sound like a pro.</p>
+
+    <div class="guide-grid">
+      <div class="guide-card voice">
+        <h3>🗣️ Voice Control</h3>
+        <ul>
+          <li><strong>Pace:</strong> Speak at 70% of your normal speed. Slow = confident.</li>
+          <li><strong>Volume:</strong> Start at medium. Drop to near-whisper for scary stats. Rise for punchlines.</li>
+          <li><strong>Pitch:</strong> Lower your pitch for serious facts. Higher for jokes and energy.</li>
+          <li><strong>Emphasis:</strong> Bold words in the script = say them LOUDER and SLOWER.</li>
+          <li><strong>Rule of 3:</strong> When listing 3 things ("doesn't knock, doesn't ask, doesn't care") — speed up each one slightly. Builds momentum.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card body">
+        <h3>🧍 Body Language</h3>
+        <ul>
+          <li><strong>Hands:</strong> Keep them visible. Use them to count points, point at screen, gesture naturally.</li>
+          <li><strong>Feet:</strong> Plant them. Don't sway or shift weight. Stand like a tree.</li>
+          <li><strong>Eyes:</strong> Pick 3 spots in the room — left, centre, right. Rotate between them. Never stare at one person.</li>
+          <li><strong>Point at screen:</strong> When referencing stats or charts, physically turn and point. Then turn back to audience.</li>
+          <li><strong>Don't grip the podium:</strong> If there's a podium, step beside it. Open stance = confidence.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card humor">
+        <h3>😄 Humor Delivery</h3>
+        <ul>
+          <li><strong>Deadpan:</strong> The funniest lines work best when you DON'T laugh. Keep a straight face. Let them laugh.</li>
+          <li><strong>Pause after jokes:</strong> Say the funny line → stop talking → wait 2-3 seconds. Silence = comedy gold.</li>
+          <li><strong>Don't explain the joke:</strong> If nobody laughs, move on. Never say "that was supposed to be funny."</li>
+          <li><strong>Self-aware humor:</strong> Lines like "we doomscroll too" work because you're laughing at yourself.</li>
+          <li><strong>Callback humor:</strong> Referencing an earlier joke later (like "the Rulebook from earlier") makes you sound polished.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card pacing">
+        <h3>⏱️ Pacing & Pauses</h3>
+        <ul>
+          <li><strong>Before a big stat:</strong> Pause 2 seconds. Then say the number. Then pause again.</li>
+          <li><strong>After a quote:</strong> Let it hang in the air for 2-3 seconds before continuing.</li>
+          <li><strong>Between slides:</strong> Don't rush. Click, breathe, look at audience, then start talking.</li>
+          <li><strong>When you lose your place:</strong> Just say "So..." and pause. Nobody will notice.</li>
+          <li><strong>Total time target:</strong> ~20-25 minutes for all 15 slides. Don't rush, don't drag.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card energy">
+        <h3>⚡ Energy Map</h3>
+        <ul>
+          <li><strong>Slide 1-2:</strong> Warm, friendly, calm (60% energy)</li>
+          <li><strong>Slide 3-5:</strong> Informative, steady, building interest (70% energy)</li>
+          <li><strong>Slide 6-9:</strong> Intense, passionate, this-is-the-scary-part (85% energy)</li>
+          <li><strong>Slide 10-12:</strong> Peak intensity, slow and powerful (90% energy)</li>
+          <li><strong>Slide 13:</strong> Hopeful, uplifting, we-can-fix-this (75% energy)</li>
+          <li><strong>Slide 14:</strong> Fun, playful, interactive (80% energy)</li>
+          <li><strong>Slide 15:</strong> Calm, sincere, memorable (65% energy)</li>
+        </ul>
+      </div>
+
+      <div class="guide-card mistakes">
+        <h3>🚫 Common Mistakes to Avoid</h3>
+        <ul>
+          <li><strong>Don't read the slide:</strong> The audience can read. YOU add the story behind it.</li>
+          <li><strong>Don't memorize word-for-word:</strong> Know the IDEA of each slide. Talk naturally.</li>
+          <li><strong>Don't apologize:</strong> Never say "sorry if this is boring" or "I'm not good at this."</li>
+          <li><strong>Don't look at your phone/notes:</strong> Glance if needed, but talk to PEOPLE not paper.</li>
+          <li><strong>Don't say "umm" or "like":</strong> Replace filler words with silence. Silence is powerful.</li>
+          <li><strong>Don't rush the ending:</strong> The last 2 slides are your LEGACY. Slow down.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 1 ==================== -->
+  <div class="slide-section slide-1">
+    <div class="slide-header">
+      <div class="slide-number">01</div>
+      <h2>Hero — Title Slide</h2>
+    </div>
+
+    <div class="script-block">
+      <p><span class="stage">Walk up slowly. Don't rush. Plant your feet. Look around the room for 2-3 seconds before speaking. Smile naturally.</span></p>
+
+      <p>Alright everyone, good <span class="hl-blue">morning</span>!</p>
+
+      <p>My name is <strong>Suvendu</strong>, and this is <strong>Ritesh</strong> — we're both from <span class="hl-blue">Trident Academy of Technology</span>, and no, we did not just wake up. We're very much prepared.</p>
+
+      <p><span class="stage">Look at Ritesh when you say his name. Small nod between you both — shows teamwork.</span></p>
+
+      <p>So today we're talking about something that literally every single person in this room does — probably did this morning — maybe even while walking to this class.</p>
+
+      <p><strong>Mind & Media — Understanding How Social Media Shapes Human Psychology.</strong></p>
+
+      <p><span class="stage">Slow down for the title. Say it with weight — this is the thesis of your entire talk.</span></p>
+
+      <p>Basically — your phone is doing things to your brain. And today, we're going to tell you exactly what. By the end of this, you might look at your Instagram a little differently.</p>
+
+      <p>No promises you'll delete it though. We're not that powerful. <span class="stage">Half-smile. Don't laugh at your own joke.</span></p>
+
+      <p>Alright — let's go.</p>
+    </div>
+
+    <div class="voice-note">Start warm and relaxed — like you're talking to friends, not reading an essay. Your first 10 seconds set the tone for the entire presentation.</div>
+    <div class="body-note">Gesture toward Ritesh during intro. Open palms = friendly and trustworthy. Don't cross arms.</div>
+    <div class="energy-note">60% energy. Calm confidence. You're not hyped — you're cool and collected.</div>
+
+    <div class="transition">CLICK → Agenda slide</div>
+  </div>
+
+  <!-- ==================== SLIDE 2 ==================== -->
+  <div class="slide-section slide-2">
+    <div class="slide-header">
+      <div class="slide-number">02</div>
+      <h2>Agenda — Roadmap</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Before we dive in, let me give you a quick map of where we're going — so you don't feel lost halfway through.</p>
+
+      <p>First, we'll look at <span class="hl-pink">The Evidence</span> — actual research on what social media is doing to your mind. Not opinions. Data. <span class="stage">Point at the first agenda item on screen.</span></p>
+
+      <p>Then we talk about <span class="hl-red">The Algorithm</span> — because spoiler: it's not random. It knows you better than your best friend does. Honestly, maybe better than you do. <span class="stage">Raise eyebrows slightly — like sharing a secret.</span></p>
+
+      <p>After that, we get into something called the <span class="hl-purple">Active Inference Framework</span> — this is the psychology behind why you can't just put the phone down. And trust me, it's not because you're weak. Your brain is just doing exactly what it was built to do.</p>
+
+      <p>And finally — <span class="hl-orange">The Digital Crowbar and Solutions</span>. Because we're not here to just scare you. We'll also talk about what you can actually do about it.</p>
+
+      <p><strong>Four sections. Fifteen slides. Let's make it worth your time.</strong> <span class="stage">Say this line with a confident nod. End with a beat of silence.</span></p>
+    </div>
+
+    <div class="voice-note">Count the sections with your fingers (1, 2, 3, 4) as you go through them. Physical counting makes the audience follow along naturally.</div>
+
+    <div class="transition">CLICK → What is Mind & Media?</div>
+  </div>
+
+  <!-- ==================== SLIDE 3 ==================== -->
+  <div class="slide-section slide-3">
+    <div class="slide-header">
+      <div class="slide-number">03</div>
+      <h2>What is Mind & Media?</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Okay so before anything else — let's just make sure we're on the same page about what we're even talking about.</p>
+
+      <p>Two words. <strong>Mind.</strong> And <strong>Media.</strong></p>
+
+      <p>The <span class="hl-purple">Mind</span> — this is your brain doing its thing. Thinking, feeling, perceiving, making decisions. It controls your memory, your emotions, even how you see yourself. Basically, it's running the whole show.</p>
+
+      <p><span class="hl-blue">Media</span> — specifically social media. Instagram, Facebook, Snapchat, YouTube... the apps you have on page one of your phone. You know the ones.</p>
+
+      <p>Now here's the interesting part — individually, both of these are fine. Your brain? Incredible. Social media? Pretty useful.</p>
+
+      <p>But when you put them together? <span class="stage">pause</span> That's where things get complicated.</p>
+
+      <p>And that's exactly what this quote captures —</p>
+
+      <p><strong><em>"What happens when the most complex organ meets the most addictive machine?"</em></strong></p>
+
+      <p>That's the question we're here to answer today. And trust me — the answer is a lot more interesting than you'd expect.</p>
+
+      <p>Let's find out.</p>
+    </div>
+
+    <div class="tip-box"><strong>Slow your voice down</strong> when reading the quote. It's the best line on the slide — give it the spotlight.</div>
+    <div class="voice-note">Drop your volume slightly for the quote. Lower volume = the audience leans in. Then return to normal for "Let's find out."</div>
+    <div class="body-note">Step forward one step before reading the quote. Step back after. Creates a micro-moment of drama.</div>
+
+    <div class="transition">CLICK → The Impact</div>
+  </div>
+
+  <!-- ==================== SLIDE 4 ==================== -->
+  <div class="slide-section slide-4">
+    <div class="slide-header">
+      <div class="slide-number">04</div>
+      <h2>The Impact of Media on Mind</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Alright, let's talk evidence. Because this isn't just a vibe — there's actual research behind this.</p>
+
+      <p>Studies have found that social media use is directly linked to <span class="hl-red">body image distortion</span> in teens. Meaning — you scroll long enough, and you start thinking everyone looks perfect — except you. But the truth is, those photos aren't even real.</p>
+
+      <p>It's also linked to <span class="hl-red">depression and anxiety</span> symptoms. In fact, the average person who spends a lot of time on social media is <span class="hl-red">3 times</span> more likely to feel depressed and has <span class="hl-red">4 times</span> more sleep problems. Three times. That's not a small number.</p>
+
+      <p>And here's the one that really hits — <span class="hl-pink">Instagram</span> was actually ranked the <strong>worst platform for mental health</strong> out of all social media apps. Yes, worse than the others. The one with the pretty pictures made people feel the worst about themselves. Funny how that works.</p>
+
+      <p>Girls are statistically more affected than boys — <span class="hl-red">46%</span> report feeling worse about their own body after scrolling. And it's gotten so bad that researchers literally coined a term — <span class="hl-red">"Snapchat Surgery"</span> — where people bring filtered selfies to cosmetic surgeons and say "make me look like this."</p>
+
+      <p><span class="stage">Turn your body toward the screen. Physically point at the 48% donut chart. Hold the point for 2 seconds. Then turn back to audience.</span> And that stat right there? <span class="hl-red">48%</span> of people felt pressured by social media to consider cosmetic surgery.</p>
+
+      <p>Basically — and I think we all quietly know this — TikTok and Instagram have done a number on us.</p>
+
+      <p>The question is <em>how</em>. And that's what the next few slides are about.</p>
+    </div>
+
+    <div class="tip-box">After <strong>"Funny how that works"</strong> — pause for one beat. Let the irony land.</div>
+    <div class="voice-note">This slide has heavy stats. Vary your delivery: say percentages SLOWLY and loudly. Say connecting words normally. This contrast keeps attention.</div>
+    <div class="energy-note">70% energy. You're presenting facts, not performing. Steady, clear, confident.</div>
+
+    <div class="transition">CLICK → Two Sides of the Debate</div>
+  </div>
+
+  <!-- ==================== SLIDE 5 ==================== -->
+  <div class="slide-section slide-5">
+    <div class="slide-header">
+      <div class="slide-number">05</div>
+      <h2>Two Sides of the Debate</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Now here's where it gets interesting — because not everyone agrees on how bad this actually is.</p>
+
+      <p>There are two camps of researchers fighting about this.</p>
+
+      <p><span class="hl-red">Camp one — the Alarmists.</span> Researchers like Twenge and RSPH looked at the data and basically said — "Social media has destroyed a generation." Strong words. They link it to addiction, depression, low self-esteem, body image issues... the whole list. Some even argue it's killing critical thinking — that we're so busy consuming content, we've stopped actually thinking about it.</p>
+
+      <p><span class="hl-cyan">Camp two — the Skeptics.</span> Researchers like Orben say — hold on, not so fast. They looked at the same studies and said the effects are actually small and nuanced. They criticized the research for using weak measures — like just measuring "screen time" in general, without asking what you're actually doing on screen.</p>
+
+      <p>And honestly? <strong>Both sides have a point.</strong></p>
+
+      <p>Because here's what the research actually lands on — and this is at the bottom of the slide — <span class="hl-red">Passive use is the danger zone</span>. <span class="hl-green">Active use is the safer zone</span>.</p>
+
+      <p>What does that mean? If you're just mindlessly scrolling, watching, comparing — that's where the damage happens. But if you're messaging friends, creating content, learning something — that's a completely different story.</p>
+
+      <p>So it's not really about <em>how much</em> time you spend. It's about <em>what you're doing</em> with it.</p>
+
+      <p>And the next slide is going to show you exactly why that passive scrolling is so hard to stop.</p>
+    </div>
+
+    <div class="voice-note">When presenting two camps, use slightly different vocal tones. Alarmists = urgent, serious. Skeptics = calmer, measured. This makes the debate feel alive.</div>
+    <div class="body-note">Gesture left when talking about Alarmists, gesture right for Skeptics — matches the two-box layout on screen.</div>
+
+    <div class="transition">CLICK → The Algorithm Advantage</div>
+  </div>
+
+  <!-- ==================== SLIDE 6 ==================== -->
+  <div class="slide-section slide-6">
+    <div class="slide-header">
+      <div class="slide-number">06</div>
+      <h2>The Algorithm Advantage</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Okay so — have you ever picked up your phone for 2 minutes... and suddenly it's been an hour? We've all been there.</p>
+
+      <p>Yeah. That's not an accident. That is <strong>engineering</strong>.</p>
+
+      <p>See, the algorithm isn't random. It's not just showing you stuff. It's <span class="hl-red">studying you</span>. Every pause, every like, every time you watched that video twice — it's taking notes. And over time, it builds a profile of you that is honestly kind of scary.</p>
+
+      <p>Social media knows you better than you know yourself. Not exaggerating. It knows what makes you angry, what makes you sad, what you secretly find funny at 2 AM — and it uses all of that to keep you on the app.</p>
+
+      <p>Think of it like a <span class="hl-orange">digital waiter</span> — except this waiter never lets you finish your food. The moment you're about to take your last bite, they show up with something even tastier. And before you know it, you've been at the table for two hours and you don't even remember ordering.</p>
+
+      <p>That's <span class="hl-red">doomscrolling</span>. An infinite loop you never chose to enter.</p>
+
+      <p>Now here's where it gets personal — <span class="hl-orange">FOMO</span>. Fear Of Missing Out. But here's the thing — it's not natural. <strong>It's manufactured.</strong> The algorithm deliberately shows you everyone's highlight reel — every party, every trip, every perfect moment — so you feel like you're the only one not invited. That fear keeps you checking. Compulsively. At 11 PM. At 2 AM. First thing in the morning.</p>
+
+      <p>And your brain starts to prefer this curated fantasy world over real life. Everything online is filtered, optimised, highlight-reel. Then you look at real life — imperfect, slow, messy — and your brain goes "ugh, boring."</p>
+
+      <p>Real life becomes noisy, messy data. And the algorithm becomes your comfort zone.</p>
+
+      <p>That's the <span class="hl-red">exploit trap</span>. And most of us are already in it.</p>
+
+      <p>But why does this happen? What's actually going on inside your brain that makes it fall for this? That's what the next slide explains.</p>
+    </div>
+
+    <div class="tip-box">The <strong>digital waiter analogy</strong> is a crowd favourite. Slow down when delivering it — let people picture it.</div>
+    <div class="voice-note">"That is engineering" — say this with zero emotion. Flat. Cold. The contrast between casual tone and a cold statement = powerful.</div>
+    <div class="body-note">During the waiter analogy, mime the waiter arriving with a plate. Small gesture = big impact. The audience starts picturing it.</div>
+    <div class="energy-note">85% energy. This is where you start to get intense. Lean into the urgency.</div>
+
+    <div class="transition">CLICK → The Mind's Mechanics</div>
+  </div>
+
+  <!-- ==================== SLIDE 7 ==================== -->
+  <div class="slide-section slide-7">
+    <div class="slide-header">
+      <div class="slide-number">07</div>
+      <h2>The Mind's Mechanics — Active Inference</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Okay, this is the slide where we get a little bit into neuroscience. Don't panic — I promise it won't hurt.</p>
+
+      <p>So here's something wild. Your brain is not a camera. It's not just recording what's happening around you. It's actually a <span class="hl-purple">prediction machine</span> — constantly guessing what's going to happen next, and updating itself when it's wrong.</p>
+
+      <p>Scientists call this the <span class="hl-purple">Active Inference Framework</span>. We call it — your brain having trust issues.</p>
+
+      <p>There are three parts to it.</p>
+
+      <p><span class="hl-blue">The Guesser</span> — your brain is always making predictions. What you'll see, what you'll hear, what happens next. It's running a simulation of reality inside your head. All the time.</p>
+
+      <p><span class="hl-cyan">The Rulebook</span> — this is everything your brain has learned about how the world works. Patterns, expectations. The blueprint it uses to make those guesses.</p>
+
+      <p><span class="hl-red">The Alarm</span> — when reality doesn't match the prediction? Your brain throws an error. A "wait, that's not what I expected" moment. And that feeling is what drives your behaviour.</p>
+
+      <p>Now — social media is messing with <strong>all three</strong> of these. It's feeding your Rulebook fake data, keeping your Alarm ringing nonstop, and making your Guesser completely confused about what's real anymore.</p>
+
+      <p>And the next slide shows you exactly how they pull it off.</p>
+    </div>
+
+    <div class="tip-box"><strong>"Your brain having trust issues"</strong> — say this line with a half-smile. It's the moment the audience relaxes and laughs.</div>
+    <div class="voice-note">This is a technical slide. Speak slightly SLOWER than normal. Pause after each of the 3 parts. Give the audience time to absorb each concept.</div>
+    <div class="body-note">Hold up 1 finger for Guesser, 2 for Rulebook, 3 for Alarm. Physical counting helps the audience track the framework.</div>
+
+    <div class="transition">CLICK → Goldilocks Zone</div>
+  </div>
+
+  <!-- ==================== SLIDE 8 ==================== -->
+  <div class="slide-section slide-8">
+    <div class="slide-header">
+      <div class="slide-number">08</div>
+      <h2>The Goldilocks Zone of Uncertainty</h2>
+    </div>
+
+    <div class="script-block">
+      <p>So we just established that your brain's Alarm keeps firing every time something unexpected happens. Now here's the question — how much unexpected is too much?</p>
+
+      <p>This is where it gets fascinating. Your brain actually has a preference zone.</p>
+
+      <p>Scientists call it — <span class="hl-green">The Goldilocks Zone of Uncertainty</span>.</p>
+
+      <p>You know the story right? Porridge too hot, too cold, then just right. Your brain works exactly the same way with uncertainty.</p>
+
+      <p><span class="hl-cyan">Zone 1</span> — Too predictable. Everything is expected, nothing surprises you. Your brain checks out. Boring. You leave.</p>
+
+      <p><span class="hl-red">Zone 3</span> — Too unpredictable. Everything is chaotic, nothing makes sense. Your brain gets overwhelmed. Anxious. You also leave.</p>
+
+      <p><span class="hl-purple">Zone 2 — The sweet spot.</span> Just enough uncertainty to keep you curious. Just enough resolution to feel satisfied. And the moment you resolve one surprise — boom, another one appears.</p>
+
+      <p>That is where social media <strong>locks you</strong>. Permanently. By design.</p>
+
+      <p>And here's the really uncomfortable part — that bottom line on the slide.</p>
+
+      <p><span class="hl-red">Real life starts feeling like Zone 3 because of Zone 2 overload.</span></p>
+
+      <p>Meaning — after hours of perfectly engineered Zone 2 stimulation from your feed, your brain's tolerance goes up. Real life — which used to be perfectly fine — now feels too slow, too boring, too unpredictable in the wrong way. Like your brain forgot how to just... exist without stimulation.</p>
+
+      <p>That's not a coincidence. That's the trap working exactly as intended.</p>
+
+      <p>So now you know how the trap works. But the next slide shows you what it actually costs you — the things you stop doing because scrolling is just... easier.</p>
+    </div>
+
+    <div class="tip-box"><strong>Pause</strong> before "exist without stimulation." The silence makes that line powerful.</div>
+    <div class="voice-note">Zone 1 = say in a bored, flat voice. Zone 3 = say with urgency and anxiety. Zone 2 = say with fascination and wonder. Match the zone's energy with your voice.</div>
+    <div class="body-note">Point at each zone on screen as you describe it. Move your hand left to right across the bar — audience eyes follow your hand.</div>
+
+    <div class="transition">CLICK → Explore vs Exploit</div>
+  </div>
+
+  <!-- ==================== SLIDE 9 ==================== -->
+  <div class="slide-section slide-9">
+    <div class="slide-header">
+      <div class="slide-number">09</div>
+      <h2>The Explore vs Exploit Paralysis</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Okay real talk. Be honest with yourself for a second.</p>
+
+      <p>You had a project to start. A person to text back. Maybe you just wanted to go outside and do something. But instead — you sat there and kept scrolling. Not for 5 minutes. For an hour.</p>
+
+      <p>That is not laziness. That is a psychological trap called <span class="hl-orange">Explore vs Exploit Paralysis</span>.</p>
+
+      <p>Here's how it works. Every moment of your life, your brain faces a choice —</p>
+
+      <p><span class="hl-blue">Explore</span> — try something new, uncertain, unknown. Could be great. Could be terrible. Risky.</p>
+
+      <p><span class="hl-orange">Exploit</span> — stick with something safe, familiar, guaranteed to give you a reward.</p>
+
+      <p>Your brain naturally prefers exploit. Less effort. Less risk.</p>
+
+      <p>And by the way — this is literally what <span class="hl-orange">procrastination</span> is. It's not a character flaw. It's not that you're lazy or irresponsible. Your brain is simply choosing the easiest exploit available in that moment. And right now, that exploit fits in your pocket.</p>
+
+      <p>And social media? It is the <span class="hl-red">easiest exploit</span> available to your brain at any given moment. Guaranteed dopamine. Zero effort. Always there.</p>
+
+      <p>So when you're supposed to start that assignment — your brain goes "or... I could just scroll." Safe. Easy. Done.</p>
+
+      <p>And real life — studying, working out, having actual conversations — starts feeling too hard by comparison. Not because it IS hard. But because your brain has been <strong>spoiled</strong>.</p>
+
+      <p>And we all know what happens when this goes on long enough. We even have a name for it now — <span class="hl-red">Brainrot</span>. When your brain has been so overfed with short, fast, dopamine-heavy content that anything requiring actual focus feels physically painful. Sitting through a lecture. Reading more than two paragraphs. Having a conversation that doesn't have a skip button.</p>
+
+      <p>Not because you got dumber. Because your brain got <strong>reprogrammed</strong>.</p>
+
+      <p>The result? The average person spends <span class="hl-red">2.5 hours</span> every day on social media. That's over 900 hours a year. And research shows <span class="hl-red">4 in 10</span> students fail to complete assignments because of screen time.</p>
+
+      <p>Scrolling has genuinely become the <strong>new smoking</strong>. Same addiction. Different substance.</p>
+
+      <p>But here's the part that shocked us the most — even when you KNOW it's fake, it still affects you. And that's what the next slide proves.</p>
+    </div>
+
+    <div class="voice-note">"Same addiction. Different substance." — Drop this line in a slow, measured way. Each word separate. Like a mic drop you walk away from.</div>
+    <div class="energy-note">85% energy. This slide is personal — the audience sees themselves in it. Let that hit.</div>
+
+    <div class="transition">CLICK → The Digital Crowbar</div>
+  </div>
+
+  <!-- ==================== SLIDE 10 ==================== -->
+  <div class="slide-section slide-10">
+    <div class="slide-header">
+      <div class="slide-number">10</div>
+      <h2>The Digital Crowbar</h2>
+    </div>
+
+    <div class="script-block">
+      <p>We promised you the part that shocked us the most. Here it is.</p>
+
+      <p>That number on the screen — <span class="hl-red">0%</span>.</p>
+
+      <p>Researchers put disclaimer labels on filtered, edited, heavily photoshopped images. Labels that literally said — "this image has been digitally altered." And then they measured how people felt after seeing them.</p>
+
+      <p><strong>Zero percent difference.</strong> Knowing it was fake did absolutely nothing.</p>
+
+      <p>Your brain still compared itself. Still felt worse. Still updated its idea of what "normal" looks like.</p>
+
+      <p>That is what we're calling <span class="hl-red">The Digital Crowbar</span> — because it doesn't knock. It doesn't ask for your permission. It doesn't care if you're smart, educated, or fully aware of what's happening. It just forces its way in and rewrites your baseline.</p>
+
+      <p>Here's the mechanism — your brain is being fed carefully curated, filtered, fake evidence every single day. And because it sees this content constantly, it starts treating it as real data. Remember <span class="hl-cyan">the Rulebook</span> from earlier? It gets updated — not with reality — but with the highlight reel of everyone else's life.</p>
+
+      <p><span class="hl-red">60%</span> of people report lower self-esteem directly linked to social media. Not because they're weak. But because their brain's definition of "normal" got quietly replaced — without them even noticing.</p>
+
+      <p>And the scariest part? <span class="stage">pause</span> You can't just think your way out of it. Awareness alone doesn't protect you. <strong>That 0% just proved it.</strong></p>
+
+      <p>So what DOES protect you? To answer that, we need to look at what's actually happening inside your brain.</p>
+    </div>
+
+    <div class="tip-box"><strong>"It doesn't knock"</strong> — deliver this as three rapid punches: "doesn't knock, doesn't ask, doesn't care." Then slow down for the payoff.</div>
+    <div class="voice-note">"Zero percent difference" — whisper this. Literally almost whisper. Quiet = terrifying. Then return to normal volume.</div>
+    <div class="body-note">When you say "That 0% just proved it" — point at the 0% on screen and hold. Let the visual and your words combine.</div>
+    <div class="energy-note">90% energy. This is the emotional peak. Your voice should carry weight. This is the "holy shit" moment.</div>
+
+    <div class="transition">CLICK → Inside the Brain</div>
+  </div>
+
+  <!-- ==================== SLIDE 11 ==================== -->
+  <div class="slide-section slide-11">
+    <div class="slide-header">
+      <div class="slide-number">11</div>
+      <h2>Inside the Brain</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Okay we've talked about psychology. Now let's go one level deeper — what is social media actually doing to your <strong>physical brain</strong>.</p>
+
+      <p>Two parts you need to know.</p>
+
+      <p><span class="hl-purple">The Hippocampus.</span> This is your brain's memory centre. It's literally where your memories are formed and stored. Now here's the scary part — chronic stress and heavy screen use actually <strong>shrink</strong> it. Not metaphorically. Physically smaller. Your brain is losing storage because of Instagram.</p>
+
+      <p><span class="hl-cyan">The Prefrontal Cortex.</span> This is the part that makes you a functioning adult. Focus, decision making, self control — all of this lives here. Every time dopamine hits from a like or a notification, this part gets a little weaker. A little more eroded.</p>
+
+      <p>Think of it this way — the Hippocampus is your <span class="hl-purple">hard drive</span> and the Prefrontal Cortex is your <span class="hl-cyan">processor</span>. Social media is simultaneously corrupting your storage and slowing down your CPU.</p>
+
+      <p>And the worst part? You don't feel it happening. There's no pain. No warning. Just one day you realise you can't focus for more than two minutes, you forget things constantly, and every decision feels exhausting.</p>
+
+      <p>That's not stress. <strong>That's structural damage.</strong></p>
+
+      <p>And the next slide shows you exactly how that damage chain works — step by step.</p>
+    </div>
+
+    <div class="tip-box">The <strong>hard drive / CPU analogy</strong> is the most memorable line in this presentation. Say it with confidence — it will stick with the audience.</div>
+    <div class="voice-note">"That's not stress. That's structural damage." — Full stop between sentences. Let "structural damage" echo in the silence.</div>
+    <div class="body-note">Point to the Hippocampus on the brain diagram (left side of screen), then the Prefrontal Cortex (right side). Physical reference = clarity.</div>
+
+    <div class="transition">CLICK → Toxic Stress</div>
+  </div>
+
+  <!-- ==================== SLIDE 12 ==================== -->
+  <div class="slide-section slide-12">
+    <div class="slide-header">
+      <div class="slide-number">12</div>
+      <h2>Toxic Stress — The Damage Chain</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Okay so we just talked about your brain physically shrinking. Fun stuff. But wait — it gets better.</p>
+
+      <p>Now let's talk about what social media is doing to your <strong>body chemistry</strong>. Because apparently destroying your brain wasn't enough.</p>
+
+      <p>This is called <span class="hl-red">The Damage Chain</span>. And it is exactly as dramatic as it sounds.</p>
+
+      <p><span class="hl-orange">Step one — Harmful Content.</span> Cyberbullying, impossible beauty standards, that one person from school who's apparently on a yacht in Bali every single week. Your feed is full of it. And every time you see it, your body reacts like you're being chased by a lion.</p>
+
+      <p><span class="hl-orange">Step two — Stress Hormones.</span> Cortisol. Adrenaline. Full panic mode. Except you're not running from anything. You're horizontal. In bed. Eating snacks. <span class="hl-pink">Having a biological emergency over a stranger's vacation photos.</span></p>
+
+      <p><span class="hl-red">Step three — Chronically Elevated.</span> Normally stress hormones spike and come back down. But because the content never stops — your body just... stays stressed. Permanently. Like that one group chat notification you've been ignoring for three weeks.</p>
+
+      <p><span class="hl-red">Step four — Damaged Connections.</span> Your brain's neural pathways — the ones that handle emotions, relationships, and rational thinking — start breaking down. Which honestly explains a lot of things about our generation.</p>
+
+      <p>And that stat — girls experience <span class="hl-red">twice the rate</span> of depression and anxiety compared to boys from social media. Twice. Boys are also affected — just apparently less efficiently.</p>
+
+      <p>The point is — your body is running a full emergency response every time you open your phone. <strong>For fun.</strong></p>
+
+      <p>Okay. We've scared you enough. Now let's talk about what you can <em>actually do</em> about it.</p>
+    </div>
+
+    <div class="tip-box"><strong>"Having a biological emergency over a stranger's vacation photos"</strong> — this will get the biggest laugh of the whole presentation. Deliver it deadpan. Don't smile. Let the audience crack up.</div>
+    <div class="voice-note">"For fun." — These two words are the punchline of the entire slide. Say them after a 2-second pause. Low pitch. Flat delivery. Then immediately shift tone with "Okay. We've scared you enough."</div>
+    <div class="body-note">During the 4 steps, walk slowly across the stage (if possible). Step 1 = left. Step 4 = right. Physical movement mirrors progression.</div>
+    <div class="energy-note">90% energy — but controlled. You're not yelling. You're delivering devastating facts calmly. That contrast is what makes it terrifying.</div>
+
+    <div class="transition">CLICK → The Fix</div>
+  </div>
+
+  <!-- ==================== SLIDE 13 ==================== -->
+  <div class="slide-section slide-13">
+    <div class="slide-header">
+      <div class="slide-number">13</div>
+      <h2>The Fix — Move, Mindful, Connect</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Okay. After everything we just told you — the shrinking brain, the stress hormones, the 0% disclaimer effect — you're probably thinking one of two things.</p>
+
+      <p>Either "I'm deleting all my apps right now" — which, respect.</p>
+
+      <p>Or "okay but I'm not doing that" — which, also respect. We're not here to judge.</p>
+
+      <p>The good news is — you don't have to delete everything. You just have to do <strong>four things</strong>.</p>
+
+      <p><span class="hl-green">Exercise.</span> Walking consistently has been shown to reduce depression risk and actually rebuild the hippocampus we just said was shrinking. Your brain can recover. All it needs is for you to go outside. Which is free. Which is crazy.</p>
+
+      <p><span class="hl-blue">Mindfulness and detox.</span> Even a two-week social media break produces dramatic improvements in mood, sleep, and focus. Two weeks. Not forever. Just long enough for your brain to remember what normal feels like.</p>
+
+      <p><span class="hl-pink">Real human connection.</span> Face to face. Actual conversations. The kind where you can't edit what you say before sending it. That's what builds real resilience — not followers, not likes.</p>
+
+      <p><span class="hl-purple">Design reforms.</span> Hiding like counts, making algorithms transparent, giving users actual control. Some platforms are starting. Not enough. But it's moving.</p>
+
+      <p>So no — you don't have to become a monk and throw your phone in a river. You just have to be <strong>a little more intentional</strong>.</p>
+
+      <p>Now — before we wrap up, we want to do something fun with you guys.</p>
+    </div>
+
+    <div class="voice-note">Shift your tone here — this is the HOPE slide. Smile more. Speak lighter. The audience has been through heavy stuff — now you're giving them the exit door.</div>
+    <div class="body-note">Point at each of the 4 solution cards on screen as you describe them. Open palms when you say "Which is free. Which is crazy." — shows generosity.</div>
+    <div class="energy-note">75% energy. Warm, optimistic, encouraging. Like a coach, not a doctor.</div>
+
+    <div class="transition">CLICK → Live Polling</div>
+  </div>
+
+  <!-- ==================== SLIDE 14 ==================== -->
+  <div class="slide-section slide-14">
+    <div class="slide-header">
+      <div class="slide-number">14</div>
+      <h2>Live Audience Polling</h2>
+    </div>
+
+    <div class="script-block">
+      <p>Alright — time for something interactive.</p>
+
+      <p>We've set up a quick 10-question quiz about your social media habits. It's anonymous-ish — you put your name but nobody's judging. Probably.</p>
+
+      <p><span class="stage">Show the form URL or QR code</span></p>
+
+      <p>Open the link on your phone, answer the 10 questions honestly, and hit submit. Your score will appear <strong>live on this screen</strong> — right here.</p>
+
+      <p>The higher your score, the more... let's say <span class="hl-orange">"vulnerable"</span> you are. If you score 100%, we need to have a talk after class.</p>
+
+      <p><span class="stage">Wait for submissions. React to names appearing on screen.</span></p>
+
+      <p>Oh look — results are coming in! Let's see who among us is the most... aware of their habits. Yeah, let's call it that.</p>
+
+      <p><span class="stage">Comment on a few results, keep it light and fun. Wait for most submissions.</span></p>
+
+      <p>Alright — great responses everyone. And on that note, let's wrap this up.</p>
+    </div>
+
+    <div class="tip-box"><strong>Keep the energy light here.</strong> This is the fun moment — react to names, joke about high scores, keep the room alive.</div>
+    <div class="voice-note">Be spontaneous. Don't script this part. React naturally to what appears. Say people's names out loud — it makes them feel included.</div>
+    <div class="body-note">Walk closer to the screen when results appear. Point at specific names. Look back at the audience and smile. This is YOUR interactive moment.</div>
+    <div class="energy-note">80% energy. Fun, playful, loose. This is the party after the lecture. Enjoy it.</div>
+
+    <div class="transition">CLICK → Thank You</div>
+  </div>
+
+  <!-- ==================== SLIDE 15 ==================== -->
+  <div class="slide-section slide-15">
+    <div class="slide-header">
+      <div class="slide-number">15</div>
+      <h2>Thank You</h2>
+    </div>
+
+    <div class="script-block">
+      <p>And that's it.</p>
+
+      <p>Social media isn't evil. It's a tool. But when a tool starts controlling the person holding it — that's a problem.</p>
+
+      <p>Your brain is the most powerful thing you own. More powerful than any algorithm. But only if you <strong>take care of it</strong>.</p>
+
+      <p>So tonight, maybe... put the phone down 30 minutes earlier. Talk to someone real. Go for a walk. Or just sit there and do absolutely nothing — your brain will thank you for it.</p>
+
+      <p>We are <strong>Suvendu and Ritesh</strong> from <span class="hl-blue">Trident Academy of Technology</span>.</p>
+
+      <p>Thank you for listening. If you have any questions, we'd love to answer them.</p>
+
+      <p>If you don't have questions — we'd love to leave.</p>
+
+      <p><span class="stage">Smile. Wait for applause. Bow slightly.</span></p>
+    </div>
+
+    <div class="tip-box"><strong>"If you don't have questions — we'd love to leave"</strong> always gets a laugh. End on the laugh. That's your final impression. Make it count.</div>
+    <div class="voice-note">"And that's it" — say this quietly and calmly. The sudden drop in energy after the fun polling slide creates a powerful emotional shift. The room goes quiet. That's YOUR moment.</div>
+    <div class="body-note">Stand next to Ritesh for the ending. Side by side. Look at the audience together. This shows unity and leaves a strong final image.</div>
+    <div class="energy-note">65% energy. Sincere, grateful, calm. End like you started — composed and confident. Full circle.</div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -222,7 +222,8 @@
       
       const name = document.getElementById('userName').value.trim();
       submitBtn.disabled = true;
-      submitBtn.textContent = "Sending...";
+      submitBtn.textContent = "Submitting...";
+      submitBtn.style.opacity = '0.7';
 
       const formData = new FormData(e.target);
       
@@ -240,16 +241,16 @@
       const score = Math.round((weighted_sum / max_possible) * 100);
       
       let tier = "Balanced";
-      let statusColor = "#10B981"; // green
+      let statusColor = "#10B981";
       let glowColor = "rgba(16, 185, 129, 0.5)";
 
       if (score >= 31 && score <= 60) {
           tier = "Stress Zone";
-          statusColor = "#F59E0B"; // yellow
+          statusColor = "#F59E0B";
           glowColor = "rgba(245, 158, 11, 0.5)";
       } else if (score > 60) {
           tier = "Toxic Zone";
-          statusColor = "#EF4444"; // red
+          statusColor = "#EF4444";
           glowColor = "rgba(239, 68, 68, 0.5)";
       }
 
@@ -262,19 +263,65 @@
         timestamp: Date.now()
       };
 
-      try {
-        await database.ref('presentations/audience/scores').push(payload);
-        
-        document.getElementById('successMsg').style.display = 'block';
+      // Helper: wrap a promise with a timeout
+      function withTimeout(promise, ms) {
+        return Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), ms))
+        ]);
+      }
+
+      // Helper: REST API fallback (bypasses SDK issues)
+      async function restApiFallback(payload) {
+        const url = firebaseConfig.databaseURL + '/presentations/audience/scores.json';
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('REST API failed: ' + res.status);
+        return res.json();
+      }
+
+      function showSuccess() {
+        const msg = document.getElementById('successMsg');
+        msg.innerHTML = '✅ Your response has been submitted!<br><span style="font-size:0.85rem;color:var(--text-muted);margin-top:8px;display:inline-block;">Score: ' + score + '% — ' + tier + '</span>';
+        msg.style.display = 'block';
         submitBtn.style.display = 'none';
-        
-        // Disable all inputs
         document.querySelectorAll('input').forEach(input => input.disabled = true);
-      } catch (err) {
-        console.error(err);
+      }
+
+      function showError(msg) {
         submitBtn.disabled = false;
-        submitBtn.textContent = "Submit Again";
-        alert("Failed to connect to Firebase database.");
+        submitBtn.textContent = "⚠️ Retry Submit";
+        submitBtn.style.opacity = '1';
+        submitBtn.style.background = '#EF4444';
+        const errDiv = document.getElementById('successMsg');
+        errDiv.style.display = 'block';
+        errDiv.style.color = '#EF4444';
+        errDiv.style.background = 'rgba(239,68,68,0.1)';
+        errDiv.style.borderColor = 'rgba(239,68,68,0.3)';
+        errDiv.textContent = msg;
+      }
+
+      // Try Method 1: Firebase SDK with 8s timeout
+      try {
+        await withTimeout(database.ref('presentations/audience/scores').push(payload), 8000);
+        showSuccess();
+        return;
+      } catch (err1) {
+        // Suppress SDK timeout errors, fallback visually engaging
+      }
+
+      // Try Method 2: Direct REST API with 8s timeout
+      submitBtn.textContent = "Retrying...";
+      try {
+        await withTimeout(restApiFallback(payload), 8000);
+        showSuccess();
+        return;
+      } catch (err2) {
+        // Offline or REST failed, degrade gracefully
+        showError('Connection failed. Check your internet and tap Retry.');
       }
     });
   </script>
