@@ -25,11 +25,11 @@
     html, body { height: 100%; overflow: hidden; }
     body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); }
  
-    .screen { display: none; flex-direction: column; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .screen { display: none; flex-direction: column; height: 100dvh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .screen.active { display: flex; }
  
     /* ── SPLASH ── */
-    #screen-splash { padding: 52px 28px 40px; justify-content: space-between; }
+    #screen-splash { padding: 52px 28px calc(40px + env(safe-area-inset-bottom)); justify-content: space-between; }
     .splash-top { flex: 1; display: flex; flex-direction: column; justify-content: center; }
     .eyebrow { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
     .splash-title { font-size: 2.1rem; font-weight: 800; line-height: 1.15; margin-bottom: 14px; }
@@ -56,7 +56,7 @@
     .progress-track { flex: 1; height: 4px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
     .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.35s cubic-bezier(.4,0,.2,1); width: 0%; }
     .progress-count { font-size: 0.72rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
-    .q-body { flex: 1; padding: 16px 24px 28px; display: flex; flex-direction: column; justify-content: space-between; }
+    .q-body { flex: 1; padding: 16px 24px calc(28px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; justify-content: space-between; }
     .q-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 28px 22px 24px; margin-bottom: 16px; }
     .q-num { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
     .q-text { font-size: 1.12rem; font-weight: 600; line-height: 1.55; }
@@ -100,10 +100,11 @@
     .btn-next.on:active { transform: scale(0.97); }
  
     /* ── REVIEW ── */
-    #screen-review { padding: 40px 24px 36px; justify-content: space-between; }
-    .review-title { font-size: 1.55rem; font-weight: 800; margin-bottom: 6px; }
-    .review-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
-    .summary-list { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 24px; }
+    #screen-review { padding: 40px 24px calc(36px + env(safe-area-inset-bottom)); justify-content: space-between; }
+    #screen-review > div:first-child { flex: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 24px; }
+    .review-title { font-size: 1.55rem; font-weight: 800; margin-bottom: 6px; flex-shrink: 0; }
+    .review-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; line-height: 1.6; flex-shrink: 0; }
+    .summary-list { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow-y: auto; flex: 1; }
     .summary-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; border-bottom: 1px solid var(--border); }
     .summary-row:last-child { border-bottom: none; }
     .summary-qlabel { font-size: 0.8rem; color: var(--muted); flex: 1; margin-right: 12px; }
