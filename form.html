@@ -273,13 +273,13 @@
       const btn = document.getElementById('btnSubmit');
       btn.disabled = true; btn.textContent = 'Submitting...';
       const total = answers.reduce((a,b) => a+b, 0);
-      const score = Math.round((total / 50) * 100);
+      const score = Math.round(((total - 10) / 40) * 100);
       let tier, statusColor, glowColor, desc, emoji, emojiBg;
-      if (score <= 40) {
+      if (score <= 35) {
         tier='Low Impact'; statusColor='#34d399'; glowColor='rgba(52,211,153,0.4)';
         desc="You have a healthy relationship with social media. Stay mindful.";
         emoji='🌱'; emojiBg='rgba(52,211,153,0.12)';
-      } else if (score <= 70) {
+      } else if (score <= 65) {
         tier='Stress Zone'; statusColor='#fbbf24'; glowColor='rgba(251,191,36,0.4)';
         desc="Social media is creating moderate stress. Small boundaries can make a big difference.";
         emoji='⚡'; emojiBg='rgba(251,191,36,0.12)';
