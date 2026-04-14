@@ -1159,10 +1159,6 @@ if (sessionStorage.getItem('animationPlayed')) {
   const renderedIds = new Set();
 
   function renderLeaderboard(submissions) {
-    if (submissions.length > 0 && liveScoreStatus) {
-      liveScoreStatus.style.display = 'none';
-    }
-    
     let newHTML = '';
     
     submissions.forEach((sub, index) => {
@@ -1179,6 +1175,11 @@ if (sessionStorage.getItem('animationPlayed')) {
         </div>
       `;
     });
+    
+    // Always re-add the status message (it gets wiped by innerHTML)
+    if (submissions.length === 0) {
+      newHTML = '<div id="live-score-status" style="grid-column: 1 / -1; text-align: center; margin-top: 40px; font-style: italic; color: rgba(255,255,255,0.5); font-size: 1.1rem;">Waiting for audience submissions...</div>';
+    }
     
     leaderboardContainer.innerHTML = newHTML;
   }
