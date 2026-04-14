@@ -1197,11 +1197,11 @@ if (sessionStorage.getItem('animationPlayed')) {
           let statusColor = "#10B981"; 
           let glowColor = "rgba(16, 185, 129, 0.5)";
 
-          if (score >= 31 && score <= 60) {
+          if (score > 35 && score <= 65) {
             tier = "Stress Zone";
             statusColor = "#F59E0B";
             glowColor = "rgba(245, 158, 11, 0.5)";
-          } else if (score > 60) {
+          } else if (score > 65) {
             tier = "Toxic Zone";
             statusColor = "#EF4444";
             glowColor = "rgba(239, 68, 68, 0.5)";
