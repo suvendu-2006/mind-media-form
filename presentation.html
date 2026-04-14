@@ -584,6 +584,15 @@ body {
 </head>
 <body>
 
+<script>
+// Guard: Always show opening animation first
+if (sessionStorage.getItem('animationPlayed')) {
+  sessionStorage.removeItem('animationPlayed');
+} else {
+  window.location.replace('./');
+}
+</script>
+
 <!-- Progress Bar -->
 <div id="progress-bar" style="width: 0%"></div>
 
