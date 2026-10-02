@@ -288,11 +288,31 @@
         desc="Social media is significantly affecting your mental health. A digital detox might help.";
         emoji='🔴'; emojiBg='rgba(248,113,113,0.12)';
       }
-      const payload = { name:userName, score, rawScore:total, tier, statusColor, glowColor, answers, timestamp:Date.now() };
+      const payload = { id: 'entry_' + Date.now(), name:userName, score, rawScore:total, tier, statusColor, glowColor, answers, timestamp:Date.now() };
+
+      // Local realtime sync across tabs and local store
+      try {
+        const local = JSON.parse(localStorage.getItem('mm_local_scores') || '[]');
+        local.push(payload);
+        localStorage.setItem('mm_local_scores', JSON.stringify(local));
+        const bc = new BroadcastChannel('mind_media_sync');
+        bc.postMessage({ type: 'NEW_SUBMISSION', payload: payload });
+      } catch (e) {
+        console.warn("Local broadcast sync error:", e);
+      }
+
+      // Cloud Firebase sync
       const withTimeout = (p,ms) => Promise.race([p, new Promise((_,r) => setTimeout(()=>r(new Error('timeout')),ms))]);
-      try { await withTimeout(db.ref('presentations/audience/scores').push(payload), 8000); } catch {
-        try { const url = 'https://chatbot-ac0f5-default-rtdb.firebaseio.com/presentations/audience/scores.json';
-          await withTimeout(fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}),8000); } catch {}
+      try { 
+        await withTimeout(db.ref('presentations/audience/scores').push(payload), 5000); 
+      } catch(err) {
+        console.warn("Firebase push failed, attempting REST POST fallback:", err);
+        try { 
+          const url = 'https://chatbot-ac0f5-default-rtdb.firebaseio.com/presentations/audience/scores.json';
+          await withTimeout(fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}),5000); 
+        } catch(e) {
+          console.warn("Firebase REST fallback also failed (likely rules locked). Local sync succeeded.");
+        }
       }
       const re = document.getElementById('resultEmoji');
       re.textContent = '✅'; re.style.background = 'rgba(52,211,153,0.12)';

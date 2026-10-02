@@ -585,10 +585,8 @@ body {
 <body>
 
 <script>
-// Guard: Always show opening animation first
-if (sessionStorage.getItem('animationPlayed')) {
-  sessionStorage.removeItem('animationPlayed');
-} else {
+// If opened with ?intro=true, require animation; otherwise allow direct viewing of the presentation & dashboard
+if (new URLSearchParams(window.location.search).get('intro') === 'true' && !sessionStorage.getItem('animationPlayed')) {
   window.location.replace('./');
 }
 </script>
@@ -1123,50 +1121,94 @@ if (sessionStorage.getItem('animationPlayed')) {
     appId: "1:807712096391:web:2224fa0b060ba9d398f822"
   };
 
+  // All active submissions store
+  let allSubmissions = [];
+  const renderedIds = new Set();
+
+  function mergeAndRender(newItems) {
+    const map = new Map();
+    // Keep existing
+    allSubmissions.forEach(item => map.set(item.id || item.timestamp, item));
+    // Merge new
+    newItems.forEach(item => map.set(item.id || item.timestamp, item));
+    allSubmissions = Array.from(map.values());
+    allSubmissions.sort((a, b) => b.score - a.score);
+    renderLeaderboard(allSubmissions);
+  }
+
+  // 1. Load locally cached submissions
+  try {
+    const cached = JSON.parse(localStorage.getItem('mm_local_scores') || '[]');
+    if (cached.length > 0) {
+      mergeAndRender(cached);
+    }
+  } catch(e) {}
+
+  // 2. Listen to BroadcastChannel for instant same-browser / same-device tab sync
+  try {
+    const bc = new BroadcastChannel('mind_media_sync');
+    bc.onmessage = (event) => {
+      if (event.data && event.data.type === 'NEW_SUBMISSION') {
+        mergeAndRender([event.data.payload]);
+      } else if (event.data && event.data.type === 'RESET_DATA') {
+        allSubmissions = [];
+        renderedIds.clear();
+        localStorage.removeItem('mm_local_scores');
+        renderLeaderboard([]);
+      }
+    };
+  } catch(e) {
+    console.warn("BroadcastChannel not supported", e);
+  }
+
+  // 3. Connect to Firebase Database
   try {
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
-    // Connect to Firebase Database
     if (leaderboardContainer) {
       const scoreRef = database.ref('presentations/audience/scores');
 
       scoreRef.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          // Convert to array
           const submissions = [];
           for (let key in data) {
             submissions.push({ id: key, ...data[key] });
           }
-          
-          // Sort descending by score
-          submissions.sort((a, b) => b.score - a.score);
-          
-          renderLeaderboard(submissions);
+          mergeAndRender(submissions);
         } else {
-          // Cleared data
-          renderLeaderboard([]);
-          if (liveScoreStatus) liveScoreStatus.style.display = 'block';
+          // If no firebase data, still respect local submissions if any
+          if (allSubmissions.length === 0) {
+            renderLeaderboard([]);
+            if (liveScoreStatus) liveScoreStatus.style.display = 'block';
+          }
+        }
+      }, (error) => {
+        console.warn("Firebase permission or network error:", error);
+        // Show status badge for instructor/presenter
+        let alertBadge = document.getElementById('fb-perm-badge');
+        if (!alertBadge && leaderboardContainer) {
+          alertBadge = document.createElement('div');
+          alertBadge.id = 'fb-perm-badge';
+          alertBadge.style.cssText = 'grid-column: 1 / -1; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; padding: 8px 14px; border-radius: 8px; font-size: 0.75rem; text-align: center; margin-bottom: 8px;';
+          alertBadge.innerHTML = '⚠️ <strong>Firebase Rules Expired / Locked:</strong> Go to Firebase Console &rarr; RTDB &rarr; Rules &rarr; set <code>.read: true, .write: true</code>. <em>(Local submissions &amp; manual additions continue to work via BroadcastChannel)</em>';
+          leaderboardContainer.parentNode.insertBefore(alertBadge, leaderboardContainer);
         }
       });
     }
   } catch (err) {
-    console.warn("Firebase not initialized or missing config. Relying on manual fallback.", err);
+    console.warn("Firebase not initialized or missing config. Relying on local sync.", err);
   }
-
-  // Track rendered IDs to prevent re-animating
-  const renderedIds = new Set();
 
   function renderLeaderboard(submissions) {
     let newHTML = '';
     
     submissions.forEach((sub, index) => {
-      const isNew = !renderedIds.has(sub.id);
-      if (isNew) renderedIds.add(sub.id);
+      const isNew = !renderedIds.has(sub.id || sub.timestamp);
+      if (isNew) renderedIds.add(sub.id || sub.timestamp);
       
-      const animationStyle = isNew ? `animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: ${0.05 * Math.min(index, 5)}s;
-` : `opacity: 1; transform: translateY(0); animation: none;`;
+      const animationStyle = isNew ? `animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: ${0.05 * Math.min(index, 5)}s;` : `opacity: 1; transform: translateY(0); animation: none;`;
       
       newHTML += `
         <div class="leaderboard-card" style="--card-color: ${sub.statusColor || '#10b981'}; ${animationStyle}">
@@ -1176,7 +1218,6 @@ if (sessionStorage.getItem('animationPlayed')) {
       `;
     });
     
-    // Always re-add the status message (it gets wiped by innerHTML)
     if (submissions.length === 0) {
       newHTML = '<div id="live-score-status" style="grid-column: 1 / -1; text-align: center; margin-top: 40px; font-style: italic; color: rgba(255,255,255,0.5); font-size: 1.1rem;">Waiting for audience submissions...</div>';
     }
@@ -1207,26 +1248,25 @@ if (sessionStorage.getItem('animationPlayed')) {
             glowColor = "rgba(239, 68, 68, 0.5)";
           }
           
+          const fakeId = 'entry_' + Date.now();
+          const item = { id: fakeId, name, score, tier, statusColor, glowColor, timestamp: Date.now() };
+
+          // Try Firebase
           try {
-             const database = firebase.database();
-             await database.ref('presentations/audience/scores').push({
-                name: name,
-                score: score,
-                tier: tier,
-                statusColor: statusColor,
-                glowColor: glowColor,
-                timestamp: Date.now()
-             });
-          } catch(e) {
-             console.error("Fallback push failed", e);
-             // Provide a local test array if Firebase is entirely borked
-             if (!window._mockSubmissions) window._mockSubmissions = [];
-             // generate fake ID for animation tracker
-             const fakeId = 'mock_' + Date.now();
-             window._mockSubmissions.push({ id: fakeId, name, score, tier, statusColor, glowColor, timestamp: Date.now() });
-             window._mockSubmissions.sort((a,b) => b.score - a.score);
-             renderLeaderboard(window._mockSubmissions);
-          }
+            const database = firebase.database();
+            await database.ref('presentations/audience/scores').push(item);
+          } catch(e) {}
+
+          // Also save locally and broadcast
+          try {
+            const local = JSON.parse(localStorage.getItem('mm_local_scores') || '[]');
+            local.push(item);
+            localStorage.setItem('mm_local_scores', JSON.stringify(local));
+            const bc = new BroadcastChannel('mind_media_sync');
+            bc.postMessage({ type: 'NEW_SUBMISSION', payload: item });
+          } catch(e) {}
+
+          mergeAndRender([item]);
         }
       }
     });
@@ -1238,19 +1278,23 @@ if (sessionStorage.getItem('animationPlayed')) {
     resetBtn.addEventListener('click', async () => {
       const confirmed = confirm("Are you sure you want to completely erase ALL audience submission data? This cannot be undone.");
       if (confirmed) {
-        // Clear mock data
-        window._mockSubmissions = [];
+        allSubmissions = [];
         renderedIds.clear();
+        localStorage.removeItem('mm_local_scores');
         
-        // Clear Firebase
+        try {
+          const bc = new BroadcastChannel('mind_media_sync');
+          bc.postMessage({ type: 'RESET_DATA' });
+        } catch(e) {}
+
         try {
           const database = firebase.database();
           await database.ref('presentations/audience/scores').remove();
         } catch(e) {
-          console.warn("Could not wipe Firebase, wiping local view instead.", e);
-          renderLeaderboard([]);
-          if (liveScoreStatus) liveScoreStatus.style.display = 'block';
+          console.warn("Could not wipe Firebase directly", e);
         }
+
+        renderLeaderboard([]);
       }
     });
   }
